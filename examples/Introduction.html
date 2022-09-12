@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>A quick introduction to Blackjax &#8212; Blackjax</title>
+    <title>A Quick Introduction to Blackjax &#8212; Blackjax</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -112,7 +112,7 @@
   <ul class="current">
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
-     A quick introduction to Blackjax
+     A Quick Introduction to Blackjax
     </a>
    </li>
    <li class="toctree-l2">
@@ -122,17 +122,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="LogisticRegressionWithLatentGaussianSampler.html">
-     Bayesian Logistic Regression
+     Bayesian Logistic Regression With Latent Gaussian Sampler
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="TemperedSMC.html">
-     Use Tempered SMC to improve exploration of MCMC methods.
+     Use Tempered SMC to Improve Exploration of MCMC Methods.
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="HierarchicalBNN.html">
-     Hierarchical Bayesian neural networks
+     Hierarchical Bayesian Neural Networks
     </a>
    </li>
    <li class="toctree-l2">
@@ -142,27 +142,22 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="GP_EllipticalSliceSampler.html">
-     Gaussian regression with the Elliptical Slice sampler
+     Gaussian Regression with the Elliptical Slice Sampler
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="SGMCMC.html">
-     MNIST digit recognition with a 3-layer Perceptron
+     MNIST Digit Recognition With a 3-Layer Perceptron
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="change_of_variable_hmc.html">
+     Change of Variable in HMC
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="Pathfinder.html">
      Pathfinder
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="use_with_numpyro.html">
-     Use BlackJAX with Numpyro
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="use_with_tfp.html">
-     Use BlackJAX with TFP
     </a>
    </li>
   </ul>
@@ -290,7 +285,7 @@ title="Source repository"
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#the-problem">
-   The problem
+   The Problem
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -300,17 +295,17 @@ title="Source repository"
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#sampler-parameters">
-     Sampler parameters
+     Sampler Parameters
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#set-the-initial-state">
-     Set the initial state
+     Set the Initial State
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#build-the-kernel-and-inference-loop">
-     Build the kernel and inference loop
+     Build the Kernel and Inference Loop
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -327,14 +322,14 @@ title="Source repository"
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#use-stan-s-window-adaptation">
-     Use Stan’s window adaptation
+     Use Stan’s Window Adaptation
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#sample-multiple-chains">
-   Sample multiple chains
+   Sample Multiple Chains
   </a>
  </li>
 </ul>
@@ -346,7 +341,7 @@ title="Source repository"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>A quick introduction to Blackjax</h1>
+                <h1>A Quick Introduction to Blackjax</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -358,7 +353,7 @@ title="Source repository"
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#the-problem">
-   The problem
+   The Problem
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -368,17 +363,17 @@ title="Source repository"
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#sampler-parameters">
-     Sampler parameters
+     Sampler Parameters
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#set-the-initial-state">
-     Set the initial state
+     Set the Initial State
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#build-the-kernel-and-inference-loop">
-     Build the kernel and inference loop
+     Build the Kernel and Inference Loop
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -395,14 +390,14 @@ title="Source repository"
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#use-stan-s-window-adaptation">
-     Use Stan’s window adaptation
+     Use Stan’s Window Adaptation
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#sample-multiple-chains">
-   Sample multiple chains
+   Sample Multiple Chains
   </a>
  </li>
 </ul>
@@ -416,7 +411,7 @@ title="Source repository"
               <div>
                 
   <section id="a-quick-introduction-to-blackjax">
-<h1>A quick introduction to Blackjax<a class="headerlink" href="#a-quick-introduction-to-blackjax" title="Permalink to this headline">#</a></h1>
+<h1>A Quick Introduction to Blackjax<a class="headerlink" href="#a-quick-introduction-to-blackjax" title="Permalink to this headline">#</a></h1>
 <p>BlackJAX is an MCMC sampling library based on <a class="reference external" href="https://github.com/google/jax">JAX</a>. BlackJAX provides well-tested and ready to use sampling algorithms. It is also explicitly designed to be modular: it is easy for advanced users to mix-and-match different metrics, integrators, trajectory integrations, etc.</p>
 <p>In this notebook we provide a simple example based on basic Hamiltonian Monte Carlo and the NUTS algorithm to showcase the architecture and interfaces in the library</p>
 <div class="cell docutils container">
@@ -441,19 +436,19 @@ title="Source repository"
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Python implementation: CPython
-Python version       : 3.10.2
-IPython version      : 8.2.0
+Python version       : 3.9.13
+IPython version      : 8.5.0
 
-jax     : 0.3.4
-jaxlib  : 0.3.2
-blackjax: 0.8.2
+jax     : 0.3.17
+jaxlib  : 0.3.15
+blackjax: 0.8.3
 
-Compiler    : GCC 11.1.0
+Compiler    : GCC 9.4.0
 OS          : Linux
-Release     : 5.16.12-zen1-1-zen
+Release     : 5.15.0-1019-azure
 Machine     : x86_64
-Processor   : 
-CPU cores   : 8
+Processor   : x86_64
+CPU cores   : 2
 Architecture: 64bit
 </pre></div>
 </div>
@@ -475,7 +470,7 @@ Architecture: 64bit
 </div>
 </div>
 <section id="the-problem">
-<h2>The problem<a class="headerlink" href="#the-problem" title="Permalink to this headline">#</a></h2>
+<h2>The Problem<a class="headerlink" href="#the-problem" title="Permalink to this headline">#</a></h2>
 <p>We’ll generate observations from a normal distribution of known <code class="docutils literal notranslate"><span class="pre">loc</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> to see if we can recover the parameters in sampling. Let’s take a decent-size dataset with 1,000 points:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -502,7 +497,7 @@ Architecture: 64bit
 <section id="hmc">
 <h2>HMC<a class="headerlink" href="#hmc" title="Permalink to this headline">#</a></h2>
 <section id="sampler-parameters">
-<h3>Sampler parameters<a class="headerlink" href="#sampler-parameters" title="Permalink to this headline">#</a></h3>
+<h3>Sampler Parameters<a class="headerlink" href="#sampler-parameters" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inv_mass_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
@@ -516,7 +511,7 @@ Architecture: 64bit
 </div>
 </section>
 <section id="set-the-initial-state">
-<h3>Set the initial state<a class="headerlink" href="#set-the-initial-state" title="Permalink to this headline">#</a></h3>
+<h3>Set the Initial State<a class="headerlink" href="#set-the-initial-state" title="Permalink to this headline">#</a></h3>
 <p>The initial state of the HMC algorithm requires not only an initial position, but also the potential energy and gradient of the potential energy at this position. BlackJAX provides a <code class="docutils literal notranslate"><span class="pre">new_state</span></code> function to initialize the state from an initial position.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -527,14 +522,14 @@ Architecture: 64bit
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HMCState(position={&#39;loc&#39;: 1.0, &#39;scale&#39;: 2.0}, potential_energy=DeviceArray(59892.75, dtype=float32), potential_energy_grad={&#39;loc&#39;: DeviceArray(-2205.0967, dtype=float32, weak_type=True), &#39;scale&#39;: DeviceArray(-57780.664, dtype=float32, weak_type=True)})
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HMCState(position={&#39;loc&#39;: 1.0, &#39;scale&#39;: 2.0}, potential_energy=DeviceArray(61290.29, dtype=float32), potential_energy_grad={&#39;loc&#39;: DeviceArray(-1998.7798, dtype=float32, weak_type=True), &#39;scale&#39;: DeviceArray(-59178.203, dtype=float32, weak_type=True)})
 </pre></div>
 </div>
 </div>
 </div>
 </section>
 <section id="build-the-kernel-and-inference-loop">
-<h3>Build the kernel and inference loop<a class="headerlink" href="#build-the-kernel-and-inference-loop" title="Permalink to this headline">#</a></h3>
+<h3>Build the Kernel and Inference Loop<a class="headerlink" href="#build-the-kernel-and-inference-loop" title="Permalink to this headline">#</a></h3>
 <p>The HMC kernel is easy to obtain:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -544,8 +539,8 @@ Architecture: 64bit
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 232 µs, sys: 0 ns, total: 232 µs
-Wall time: 246 µs
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 188 µs, sys: 0 ns, total: 188 µs
+Wall time: 197 µs
 </pre></div>
 </div>
 </div>
@@ -582,8 +577,8 @@ Wall time: 246 µs
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3.72 s, sys: 9.58 ms, total: 3.73 s
-Wall time: 3.72 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.61 s, sys: 23.3 ms, total: 2.63 s
+Wall time: 2.63 s
 </pre></div>
 </div>
 </div>
@@ -605,7 +600,7 @@ Wall time: 3.72 s
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;scale&#39;)
 </pre></div>
 </div>
-<img alt="../_images/a7f33f4b9d34c0380a0c441e08d94047b2cbcb0f3769147a8e0ff3c7551bb5e5.png" src="../_images/a7f33f4b9d34c0380a0c441e08d94047b2cbcb0f3769147a8e0ff3c7551bb5e5.png" />
+<img alt="../_images/28c5352df3f7191d80e8044005790eb193e87b348ddf3ba266d14c1762a61f94.png" src="../_images/28c5352df3f7191d80e8044005790eb193e87b348ddf3ba266d14c1762a61f94.png" />
 </div>
 </div>
 </section>
@@ -632,7 +627,7 @@ Wall time: 3.72 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HMCState(position={&#39;loc&#39;: 1.0, &#39;scale&#39;: 2.0}, potential_energy=DeviceArray(59892.75, dtype=float32), potential_energy_grad={&#39;loc&#39;: DeviceArray(-2205.0967, dtype=float32, weak_type=True), &#39;scale&#39;: DeviceArray(-57780.664, dtype=float32, weak_type=True)})
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HMCState(position={&#39;loc&#39;: 1.0, &#39;scale&#39;: 2.0}, potential_energy=DeviceArray(61290.29, dtype=float32), potential_energy_grad={&#39;loc&#39;: DeviceArray(-1998.7798, dtype=float32, weak_type=True), &#39;scale&#39;: DeviceArray(-59178.203, dtype=float32, weak_type=True)})
 </pre></div>
 </div>
 </div>
@@ -649,8 +644,8 @@ Wall time: 3.72 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 18.6 s, sys: 19.6 ms, total: 18.6 s
-Wall time: 18.6 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 14.1 s, sys: 20.1 ms, total: 14.2 s
+Wall time: 14.2 s
 </pre></div>
 </div>
 </div>
@@ -672,11 +667,11 @@ Wall time: 18.6 s
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;scale&#39;)
 </pre></div>
 </div>
-<img alt="../_images/28a2ca51b752b3557cfea36e06572d62cf39f80309a8814bab32262a268d5009.png" src="../_images/28a2ca51b752b3557cfea36e06572d62cf39f80309a8814bab32262a268d5009.png" />
+<img alt="../_images/b06242ac51590576508b7d10ba3452a87a31019e0c551286dbd9364db87ec333.png" src="../_images/b06242ac51590576508b7d10ba3452a87a31019e0c551286dbd9364db87ec333.png" />
 </div>
 </div>
 <section id="use-stan-s-window-adaptation">
-<h3>Use Stan’s window adaptation<a class="headerlink" href="#use-stan-s-window-adaptation" title="Permalink to this headline">#</a></h3>
+<h3>Use Stan’s Window Adaptation<a class="headerlink" href="#use-stan-s-window-adaptation" title="Permalink to this headline">#</a></h3>
 <p>Specifying the step size and inverse mass matrix is cumbersome. We can use Stan’s window adaptation to get reasonable values for them so we have, in practice, no parameter to specify.</p>
 <p>The adaptation algorithm takes a function that returns a transition kernel given a step size and an inverse mass matrix:</p>
 <div class="cell docutils container">
@@ -696,8 +691,8 @@ Wall time: 18.6 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 4.16 s, sys: 28.2 ms, total: 4.19 s
-Wall time: 4.17 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3.13 s, sys: 15.9 ms, total: 3.14 s
+Wall time: 3.14 s
 </pre></div>
 </div>
 </div>
@@ -707,7 +702,7 @@ Wall time: 4.17 s
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
 
-<span class="n">states</span> <span class="o">=</span> <span class="n">inference_loop</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="mi">1_000</span><span class="p">)</span>
+<span class="n">states</span> <span class="o">=</span> <span class="n">inference_loop</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">nuts</span><span class="o">.</span><span class="n">step</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">,</span> <span class="mi">1_000</span><span class="p">)</span>
 
 <span class="n">loc_samples</span> <span class="o">=</span> <span class="n">states</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">block_until_ready</span><span class="p">()</span>
 <span class="n">scale_samples</span> <span class="o">=</span> <span class="n">states</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="s2">&quot;scale&quot;</span><span class="p">]</span>
@@ -715,8 +710,8 @@ Wall time: 4.17 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.92 s, sys: 14.5 ms, total: 2.94 s
-Wall time: 2.92 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 4.8 s, sys: 28.2 ms, total: 4.82 s
+Wall time: 4.82 s
 </pre></div>
 </div>
 </div>
@@ -738,13 +733,13 @@ Wall time: 2.92 s
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;scale&#39;)
 </pre></div>
 </div>
-<img alt="../_images/0a5b9e63d6fcda165ccee5520d28534e058229ababa607a1e94fede07f4ce08f.png" src="../_images/0a5b9e63d6fcda165ccee5520d28534e058229ababa607a1e94fede07f4ce08f.png" />
+<img alt="../_images/9abf170a0ca344c8605728512f837a736d9f24832abd02a696c03c4b01ee85fd.png" src="../_images/9abf170a0ca344c8605728512f837a736d9f24832abd02a696c03c4b01ee85fd.png" />
 </div>
 </div>
 </section>
 </section>
 <section id="sample-multiple-chains">
-<h2>Sample multiple chains<a class="headerlink" href="#sample-multiple-chains" title="Permalink to this headline">#</a></h2>
+<h2>Sample Multiple Chains<a class="headerlink" href="#sample-multiple-chains" title="Permalink to this headline">#</a></h2>
 <p>We can easily sample multiple chains using JAX’s <code class="docutils literal notranslate"><span class="pre">vmap</span></code> construct. See the <a class="reference external" href="https://jax.readthedocs.io/en/latest/jax.html?highlight=vmap#jax.vmap">documentation</a> to understand how the mapping works.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -784,17 +779,17 @@ Wall time: 2.92 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 46.1 s, sys: 38.1 ms, total: 46.2 s
-Wall time: 46.4 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 28.8 s, sys: 35.7 ms, total: 28.9 s
+Wall time: 28.9 s
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DeviceArray([[ 1.0049593,  1.0078753,  1.0031736,  1.0107614],
-             [ 1.0107845,  1.0095812,  1.0048555,  1.0148232],
-             [ 1.011096 ,  1.01008  ,  1.0055729,  1.01982  ],
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DeviceArray([[ 1.0041556,  1.0070716,  1.0029685,  1.0099577],
+             [ 1.0092947,  1.0086033,  1.0044539,  1.0138453],
+             [ 1.0095675,  1.0090598,  1.0049824,  1.0181748],
              ...,
-             [10.233471 , 10.016022 , 10.13053  , 10.098086 ],
-             [ 9.8614025,  9.828763 , 10.2408905, 10.235874 ],
-             [ 9.912722 , 10.014383 ,  9.7814   , 10.848415 ]],            dtype=float32)
+             [ 9.415011 ,  9.172707 ,  9.306277 ,  9.229651 ],
+             [ 9.044283 ,  8.98738  ,  9.419538 ,  9.374538 ],
+             [ 9.0954895,  9.173163 ,  8.962197 , 10.010776 ]],            dtype=float32)
 </pre></div>
 </div>
 </div>
@@ -814,23 +809,23 @@ Wall time: 46.4 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 6min, sys: 40.4 s, total: 6min 40s
-Wall time: 3min 57s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3min 33s, sys: 20.9 s, total: 3min 54s
+Wall time: 2min 51s
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DeviceArray([[ 1.0156796 ,  1.0019139 ,  1.0038959 , ...,  1.0025192 ,
-               1.0009973 ,  0.99880064],
-             [ 1.0175884 ,  1.0032119 ,  1.0056841 , ...,  1.0021151 ,
-               1.0053848 ,  0.9982554 ],
-             [ 1.0176942 ,  1.0039579 ,  1.013342  , ...,  1.0026482 ,
-               1.0052851 ,  0.99972177],
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DeviceArray([[ 1.01334  ,  1.0017086,  1.0036905, ...,  1.002314 ,
+               1.0009458,  0.9987491],
+             [ 1.0151166,  1.00281  ,  1.0052818, ...,  1.0017132,
+               1.0051302,  0.9981528],
+             [ 1.0151899,  1.0035084,  1.0121961, ...,  1.0018238,
+               1.0049816,  0.9994182],
              ...,
-             [ 9.703349  , 10.843653  , 10.183631  , ...,  9.880292  ,
-               9.970659  ,  9.664438  ],
-             [ 9.638495  , 11.002872  ,  9.232019  , ..., 10.016487  ,
-               9.908677  ,  9.898965  ],
-             [ 9.076547  , 11.134427  ,  9.475897  , ...,  9.927615  ,
-               9.4197    , 10.064939  ]], dtype=float32)
+             [ 8.882753 , 10.04768  ,  9.367971 , ...,  9.101812 ,
+               9.133966 ,  8.836653 ],
+             [ 8.817319 , 10.21588  ,  8.413582 , ...,  9.236458 ,
+               9.078359 ,  9.070929 ],
+             [ 8.241099 , 10.348853 ,  8.654301 , ...,  9.139428 ,
+               8.589337 ,  9.241323 ]], dtype=float32)
 </pre></div>
 </div>
 </div>
