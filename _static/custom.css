@@ -1,5 +1,9 @@
+body { background-color: #fefefa;}
+div.cell div.cell_input {
+    background-color: #f7f7f3;
+}
+
 #site-navigation{
-	background: #E6E7E8;
 	h1.site-logo {
 		font-weight: bold;
 	}

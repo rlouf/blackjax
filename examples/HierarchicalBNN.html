@@ -97,13 +97,13 @@
     <div class="bd-toc-item active">
         <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  Blackjax by example
+  HOW TO
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../howtos.html">
-   HowTos
+  <a class="reference internal" href="../howto_use_ppl.html">
+   Use the model I built with X?
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
@@ -112,27 +112,39 @@
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="aesara.html">
-     Use BlackJAX with Aesara
+    <a class="reference internal" href="howto_use_aesara.html">
+     Use with Aesara models
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="numpyro.html">
-     Use BlackJAX with Numpyro
+    <a class="reference internal" href="howto_use_numpyro.html">
+     Use with Numpyro models
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="pymc.html">
-     Use BlackJAX with PyMC
+    <a class="reference internal" href="howto_use_pymc.html">
+     Use with PyMC models
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="tfp.html">
-     Use BlackJAX with TFP
+    <a class="reference internal" href="howto_use_tfp.html">
+     Use with TFP models
     </a>
    </li>
   </ul>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="howto_sample_multiple_chains.html">
+   Sample with multiple chains?
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Blackjax by example
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="../examples.html">
    Examples
@@ -146,11 +158,6 @@
    <li class="toctree-l2">
     <a class="reference internal" href="Introduction.html">
      A Quick Introduction to Blackjax
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="MultipleChains.html">
-     Sampling Multiple Chains
     </a>
    </li>
    <li class="toctree-l2">
@@ -485,17 +492,6 @@ title="Source repository"
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2022-09-19 15:20:36.722452: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libcudart.so.11.0&#39;; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory
-2022-09-19 15:20:36.761452: E tensorflow/stream_executor/cuda/cuda_blas.cc:2981] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2022-09-19 15:20:37.598731: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory
-2022-09-19 15:20:37.598857: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory
-2022-09-19 15:20:37.598869: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="data">
@@ -512,7 +508,7 @@ title="Source repository"
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/fa7bb63a310e026295c6baec7678920a5645a3ed50b2353da9abc79c37569b1d.png" src="../_images/fa7bb63a310e026295c6baec7678920a5645a3ed50b2353da9abc79c37569b1d.png" />
+<img alt="../_images/8ee73ceeca1627749076bc9a4ef39075ac7789c6c3ed86a9eb82f688fbca6b8b.png" src="../_images/8ee73ceeca1627749076bc9a4ef39075ac7789c6c3ed86a9eb82f688fbca6b8b.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -967,8 +963,8 @@ $$</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1min 44s, sys: 1.19 s, total: 1min 45s
-Wall time: 1min 44s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1min 43s, sys: 1.08 s, total: 1min 44s
+Wall time: 1min 42s
 </pre></div>
 </div>
 </div>

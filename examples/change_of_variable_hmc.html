@@ -97,13 +97,13 @@
     <div class="bd-toc-item active">
         <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  Blackjax by example
+  HOW TO
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../howtos.html">
-   HowTos
+  <a class="reference internal" href="../howto_use_ppl.html">
+   Use the model I built with X?
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
@@ -112,27 +112,39 @@
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="aesara.html">
-     Use BlackJAX with Aesara
+    <a class="reference internal" href="howto_use_aesara.html">
+     Use with Aesara models
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="numpyro.html">
-     Use BlackJAX with Numpyro
+    <a class="reference internal" href="howto_use_numpyro.html">
+     Use with Numpyro models
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="pymc.html">
-     Use BlackJAX with PyMC
+    <a class="reference internal" href="howto_use_pymc.html">
+     Use with PyMC models
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="tfp.html">
-     Use BlackJAX with TFP
+    <a class="reference internal" href="howto_use_tfp.html">
+     Use with TFP models
     </a>
    </li>
   </ul>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="howto_sample_multiple_chains.html">
+   Sample with multiple chains?
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Blackjax by example
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="../examples.html">
    Examples
@@ -146,11 +158,6 @@
    <li class="toctree-l2">
     <a class="reference internal" href="Introduction.html">
      A Quick Introduction to Blackjax
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="MultipleChains.html">
-     Sampling Multiple Chains
     </a>
    </li>
    <li class="toctree-l2">
@@ -451,17 +458,6 @@ p(a, b) &amp;\propto (a+b)^{-5/2}
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2022-09-19 15:43:06.982154: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libcudart.so.11.0&#39;; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory
-2022-09-19 15:43:07.062120: E tensorflow/stream_executor/cuda/cuda_blas.cc:2981] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2022-09-19 15:43:08.639280: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory
-2022-09-19 15:43:08.639429: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory
-2022-09-19 15:43:08.639443: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
-</pre></div>
-</div>
-</div>
 </div>
 <section id="data">
 <h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">#</a></h2>
@@ -741,8 +737,8 @@ p(a, b) &amp;\propto (a+b)^{-5/2}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 22.6 s, sys: 84.5 ms, total: 22.7 s
-Wall time: 22.7 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 21.8 s, sys: 102 ms, total: 21.9 s
+Wall time: 21.8 s
 </pre></div>
 </div>
 </div>
@@ -778,8 +774,8 @@ Wall time: 22.7 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 10.1 s, sys: 62.7 ms, total: 10.1 s
-Wall time: 10.1 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 9.48 s, sys: 35.8 ms, total: 9.52 s
+Wall time: 9.51 s
 </pre></div>
 </div>
 </div>
@@ -1853,8 +1849,8 @@ Wall time: 10.1 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 21 s, sys: 46.9 ms, total: 21.1 s
-Wall time: 21.1 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 21 s, sys: 44.1 ms, total: 21.1 s
+Wall time: 21 s
 </pre></div>
 </div>
 </div>
@@ -1870,8 +1866,8 @@ Wall time: 21.1 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 10.5 s, sys: 51.4 ms, total: 10.5 s
-Wall time: 10.5 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 10.3 s, sys: 28 ms, total: 10.3 s
+Wall time: 10.3 s
 </pre></div>
 </div>
 </div>
@@ -2903,8 +2899,8 @@ Wall time: 10.5 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 28.7 s, sys: 83.5 ms, total: 28.8 s
-Wall time: 28.8 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 28.1 s, sys: 140 ms, total: 28.2 s
+Wall time: 28.2 s
 </pre></div>
 </div>
 </div>
@@ -2920,8 +2916,8 @@ Wall time: 28.8 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 11.7 s, sys: 55.8 ms, total: 11.8 s
-Wall time: 11.7 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 10.7 s, sys: 48 ms, total: 10.8 s
+Wall time: 10.8 s
 </pre></div>
 </div>
 </div>

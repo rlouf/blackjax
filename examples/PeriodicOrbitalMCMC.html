@@ -97,13 +97,13 @@
     <div class="bd-toc-item active">
         <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  Blackjax by example
+  HOW TO
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../howtos.html">
-   HowTos
+  <a class="reference internal" href="../howto_use_ppl.html">
+   Use the model I built with X?
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
@@ -112,27 +112,39 @@
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="aesara.html">
-     Use BlackJAX with Aesara
+    <a class="reference internal" href="howto_use_aesara.html">
+     Use with Aesara models
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="numpyro.html">
-     Use BlackJAX with Numpyro
+    <a class="reference internal" href="howto_use_numpyro.html">
+     Use with Numpyro models
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="pymc.html">
-     Use BlackJAX with PyMC
+    <a class="reference internal" href="howto_use_pymc.html">
+     Use with PyMC models
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="tfp.html">
-     Use BlackJAX with TFP
+    <a class="reference internal" href="howto_use_tfp.html">
+     Use with TFP models
     </a>
    </li>
   </ul>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="howto_sample_multiple_chains.html">
+   Sample with multiple chains?
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Blackjax by example
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="../examples.html">
    Examples
@@ -146,11 +158,6 @@
    <li class="toctree-l2">
     <a class="reference internal" href="Introduction.html">
      A Quick Introduction to Blackjax
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="MultipleChains.html">
-     Sampling Multiple Chains
     </a>
    </li>
    <li class="toctree-l2">
@@ -508,7 +515,7 @@ IPython version      : 8.5.0
 
 jax     : 0.3.17
 jaxlib  : 0.3.15
-blackjax: 0.8.3
+blackjax: 0.9.0
 
 Compiler    : GCC 9.4.0
 OS          : Linux
@@ -642,8 +649,8 @@ $$</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 291 ms, sys: 4.27 ms, total: 295 ms
-Wall time: 293 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 297 ms, sys: 8 ms, total: 305 ms
+Wall time: 304 ms
 </pre></div>
 </div>
 </div>
@@ -660,8 +667,8 @@ Wall time: 293 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.22 s, sys: 7.75 ms, total: 1.23 s
-Wall time: 1.22 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.19 s, sys: 0 ns, total: 1.19 s
+Wall time: 1.18 s
 </pre></div>
 </div>
 </div>
@@ -692,8 +699,8 @@ Wall time: 1.22 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 17.2 ms, sys: 83 µs, total: 17.3 ms
-Wall time: 17 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 16.7 ms, sys: 45 µs, total: 16.8 ms
+Wall time: 16.3 ms
 </pre></div>
 </div>
 </div>
@@ -710,8 +717,8 @@ Wall time: 17 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.06 s, sys: 0 ns, total: 1.06 s
-Wall time: 1.06 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.02 s, sys: 0 ns, total: 1.02 s
+Wall time: 1.02 s
 </pre></div>
 </div>
 </div>
@@ -742,8 +749,8 @@ Wall time: 1.06 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 18.3 ms, sys: 131 µs, total: 18.4 ms
-Wall time: 17.5 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 16.5 ms, sys: 26 µs, total: 16.5 ms
+Wall time: 16.1 ms
 </pre></div>
 </div>
 </div>
@@ -760,8 +767,8 @@ Wall time: 17.5 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.13 s, sys: 0 ns, total: 1.13 s
-Wall time: 1.13 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.09 s, sys: 4.12 ms, total: 1.09 s
+Wall time: 1.09 s
 </pre></div>
 </div>
 </div>
@@ -837,8 +844,8 @@ $$</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 16.6 ms, sys: 0 ns, total: 16.6 ms
-Wall time: 16.3 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 16.8 ms, sys: 41 µs, total: 16.9 ms
+Wall time: 16.4 ms
 </pre></div>
 </div>
 </div>
@@ -855,8 +862,8 @@ Wall time: 16.3 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 937 ms, sys: 132 µs, total: 937 ms
-Wall time: 933 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 917 ms, sys: 0 ns, total: 917 ms
+Wall time: 911 ms
 </pre></div>
 </div>
 </div>
@@ -1011,8 +1018,8 @@ $$</p>
 </div>
 <div class="cell_output docutils container">
 <img alt="../_images/de38aea7f9a81ff1486e15e5d1516bd10adb6d2ee62ea9bb4ac958a4d7fc3edd.png" src="../_images/de38aea7f9a81ff1486e15e5d1516bd10adb6d2ee62ea9bb4ac958a4d7fc3edd.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.12 s, sys: 68.5 ms, total: 2.18 s
-Wall time: 2.05 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.1 s, sys: 60.2 ms, total: 2.16 s
+Wall time: 2.02 s
 </pre></div>
 </div>
 </div>
@@ -1038,8 +1045,8 @@ Wall time: 2.05 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 825 ms, sys: 4.22 ms, total: 829 ms
-Wall time: 827 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 843 ms, sys: 11.8 ms, total: 855 ms
+Wall time: 850 ms
 </pre></div>
 </div>
 </div>
@@ -1056,8 +1063,8 @@ Wall time: 827 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.12 s, sys: 0 ns, total: 1.12 s
-Wall time: 1.12 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.08 s, sys: 11.8 ms, total: 1.1 s
+Wall time: 1.09 s
 </pre></div>
 </div>
 </div>
