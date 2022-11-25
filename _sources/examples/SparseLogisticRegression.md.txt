@@ -4,13 +4,13 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.1
+    jupytext_version: 1.13.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
 mystnb:
-  execution_timeout: 200
+  execution_timeout: 300
 ---
 
 # Sparse logistic regression
@@ -29,8 +29,9 @@ $$
 \pi_0(\beta, \lambda, \tau) = \text{Gamma}(\tau;1/2, 1/2)\prod_i \mathcal{N}(\beta_i;0, 1)\text{Gamma}(\lambda_i;1/2, 1/2)
 $$
 
-
 ```{code-cell} ipython3
+:tags: [remove-stderr]
+
 import jax
 import jax.numpy as jnp
 import jax.random as jrnd
@@ -88,7 +89,6 @@ def inference_loop(rng, init_state, kernel, n_iter):
     return states, info
 
 
-print("Loading German credit data...")
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data-numeric"
 data = pd.read_table(url, header=None, delim_whitespace=True)
 y = -1 * (data.iloc[:, -1].values - 2)
@@ -101,20 +101,18 @@ X = np.concatenate([np.ones((1000, 1)), X], axis=1)
 N_OBS, N_REG = X.shape
 
 N_PARAM = N_REG * 2 + 1
-print("Setting up German credit logistic horseshoe model...")
 dist = HorseshoeLogisticReg(X, y)
 
-batch_fn = jax.vmap
 [n_chain, n_warm, n_iter] = [128, 20000, 10000]
 ksam, kinit = jrnd.split(jrnd.PRNGKey(0), 2)
 dist.initialize_model(kinit, n_chain)
 
-print("Running MEADS...")
 tic1 = pd.Timestamp.now()
 k_warm, k_sample = jrnd.split(ksam)
-warmup = blackjax.meads(dist.logprob_fn, n_chain, n_warm, batch_fn=batch_fn)
-chain_state, kernel, _ = warmup.run(k_warm, dist.init_params)
-init_state = chain_state.states
+warmup = blackjax.meads(dist.logprob_fn, n_chain)
+adaptation_results = warmup.run(k_warm, dist.init_params, n_warm)
+init_state = adaptation_results.state
+kernel = adaptation_results.kernel
 
 
 def one_chain(k_sam, init_state):
@@ -123,8 +121,13 @@ def one_chain(k_sam, init_state):
 
 
 k_sample = jrnd.split(k_sample, n_chain)
-samples, infos = batch_fn(one_chain)(k_sample, init_state)
+samples, infos = jax.vmap(one_chain)(k_sample, init_state)
 tic2 = pd.Timestamp.now()
 print("Runtime for MEADS", tic2 - tic1)
+```
+
+```{code-cell} ipython3
+:tags: [hide-input]
+
 print_summary(samples)
 ```

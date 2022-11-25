@@ -22,8 +22,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
     
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -33,12 +32,7 @@
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -122,8 +116,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="howto_use_pymc.html">
-     Use with PyMC models
+    <a class="reference internal" href="howto_use_oryx.html">
+     Use with Oryx models
     </a>
    </li>
    <li class="toctree-l2">
@@ -136,6 +130,16 @@
  <li class="toctree-l1">
   <a class="reference internal" href="howto_sample_multiple_chains.html">
    Sample with multiple chains?
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="howto_custom_gradients.html">
+   Use custom gradients?
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="howto_other_frameworks.html">
+   Use non-JAX log-prob functions?
   </a>
  </li>
 </ul>
@@ -225,8 +229,23 @@
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../sampling.html">
-   Sampling
+  <a class="reference internal" href="../mcmc.html">
+   MCMC sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sgmcmc.html">
+   Stochastic gradient MCMC
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../smc.html">
+   Sequential Monte Carlo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../vi.html">
+   Variational Inference
   </a>
  </li>
  <li class="toctree-l1">
@@ -352,6 +371,13 @@ title="Source repository"
   <a class="reference internal nav-link" href="#sample-from-the-posterior-distribution-of-the-perceptron-s-weights">
    Sample From the Posterior Distribution of the Perceptron’s Weights
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sampling-with-sghmc">
+     Sampling with SGHMC
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -386,6 +412,13 @@ title="Source repository"
   <a class="reference internal nav-link" href="#sample-from-the-posterior-distribution-of-the-perceptron-s-weights">
    Sample From the Posterior Distribution of the Perceptron’s Weights
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sampling-with-sghmc">
+     Sampling with SGHMC
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -403,10 +436,12 @@ title="Source repository"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
-<span class="kn">import</span> <span class="nn">jax.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
 <span class="kn">import</span> <span class="nn">jax.scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<span class="kn">import</span> <span class="nn">flax.linen</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">distrax</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 </pre></div>
 </div>
 </div>
@@ -414,7 +449,7 @@ title="Source repository"
 <section id="data-preparation">
 <h2>Data Preparation<a class="headerlink" href="#data-preparation" title="Permalink to this headline">#</a></h2>
 <p>We download the MNIST data using <code class="docutils literal notranslate"><span class="pre">tensorflow-datasets</span></code>:</p>
-<div class="cell docutils container">
+<div class="cell tag_remove-stdout tag_remove-stderr docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow_datasets</span> <span class="k">as</span> <span class="nn">tfds</span>
 
@@ -433,7 +468,7 @@ title="Source repository"
 <li><p>The images are arrays of RGB codes between 0 and 255. We normalize them by the maximum value to get a range between 0 and 1;</p></li>
 <li><p>We hot-encode category numbers.</p></li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_remove-stdout tag_remove-stderr docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">one_hot_encode</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">):</span>
     <span class="s2">&quot;Create a one-hot encoding of x of size k.&quot;</span>
@@ -480,47 +515,38 @@ title="Source repository"
 \end{align*}\end{split}\]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
-<span class="k">def</span> <span class="nf">predict_fn</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns the probability for the image represented by X</span>
-<span class="sd">    to be in each category given the MLP&#39;s weights vakues.</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="nd">@nn</span><span class="o">.</span><span class="n">compact</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="mi">100</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="mi">10</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">activations</span> <span class="o">=</span> <span class="n">X</span>
-    <span class="k">for</span> <span class="n">W</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-        <span class="n">outputs</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">W</span><span class="p">,</span> <span class="n">activations</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span>
-        <span class="n">activations</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
-
-    <span class="n">final_W</span><span class="p">,</span> <span class="n">final_b</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">logits</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">final_W</span><span class="p">,</span> <span class="n">activations</span><span class="p">)</span> <span class="o">+</span> <span class="n">final_b</span>
-    <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">NN</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">logprior_fn</span><span class="p">(</span><span class="n">parameters</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">logprior_fn</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Compute the value of the log-prior density function.&quot;&quot;&quot;</span>
-    <span class="n">logprob</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="k">for</span> <span class="n">W</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
-        <span class="n">logprob</span> <span class="o">+=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logpdf</span><span class="p">(</span><span class="n">W</span><span class="p">))</span>
-        <span class="n">logprob</span> <span class="o">+=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logpdf</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">logprob</span>
+    <span class="n">leaves</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree_util</span><span class="o">.</span><span class="n">tree_flatten</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">flat_params</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">jnp</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">distrax</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">flat_params</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">loglikelihood_fn</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">loglikelihood_fn</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Categorical log-likelihood&quot;&quot;&quot;</span>
     <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span>
-    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">predict_fn</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">X</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">model</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">))</span>
 
 
 <span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
-<span class="k">def</span> <span class="nf">compute_accuracy</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">compute_accuracy</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Compute the accuracy of the model.</span>
 
 <span class="sd">    To make predictions we take the number that corresponds to the highest probability value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">target_class</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">predicted_class</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span>
-        <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">predict_fn</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
-    <span class="p">)</span>
+    <span class="n">predicted_class</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">predicted_class</span> <span class="o">==</span> <span class="n">target_class</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -530,52 +556,17 @@ title="Source repository"
 <section id="sample-from-the-posterior-distribution-of-the-perceptron-s-weights">
 <h2>Sample From the Posterior Distribution of the Perceptron’s Weights<a class="headerlink" href="#sample-from-the-posterior-distribution-of-the-perceptron-s-weights" title="Permalink to this headline">#</a></h2>
 <p>Now we need to get initial values for the parameters, and we simply sample from their prior distribution:</p>
+<p>We now sample from the model’s posteriors using SGLD. We discard the first 1000 samples until the sampler has reached the typical set, and then take 2000 samples. We record the model’s accuracy with the current values every 100 steps.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">init_parameters</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">sizes</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">    Parameter</span>
-<span class="sd">    ----------</span>
-<span class="sd">    rng_key</span>
-<span class="sd">        PRNGKey used by JAX to generate pseudo-random numbers</span>
-<span class="sd">    sizes</span>
-<span class="sd">        List of size for the subsequent layers. The first size must correspond</span>
-<span class="sd">        to the size of the input data and the last one to the number of</span>
-<span class="sd">        categories.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">num_layers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sizes</span><span class="p">)</span>
-    <span class="n">keys</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">num_layers</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">[</span>
-        <span class="n">init_layer</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">rng_key</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">sizes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">sizes</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-    <span class="p">]</span>
-
-
-<span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Initialize the weights for a single layer.&quot;&quot;&quot;</span>
-    <span class="n">key_W</span><span class="p">,</span> <span class="n">key_b</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng_key</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">key_W</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">))),</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span>
-        <span class="n">key_b</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span><span class="p">,)</span>
-    <span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>We now sample from the model’s posteriors. We discard the first 1000 samples until the sampler has reached the typical set, and then take 2000 samples. We record the model’s accuracy with the current values every 100 steps.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
-
-<span class="kn">from</span> <span class="nn">fastprogress.fastprogress</span> <span class="kn">import</span> <span class="n">progress_bar</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fastprogress.fastprogress</span> <span class="kn">import</span> <span class="n">progress_bar</span>
 
 <span class="kn">import</span> <span class="nn">blackjax</span>
-<span class="kn">from</span> <span class="nn">blackjax.sgmcmc.gradients</span> <span class="kn">import</span> <span class="n">grad_estimator</span>
+<span class="kn">import</span> <span class="nn">blackjax.sgmcmc.gradients</span> <span class="k">as</span> <span class="nn">gradients</span>
 
 
 <span class="n">data_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span>
 <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">512</span>
-<span class="n">layer_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">784</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
 <span class="n">step_size</span> <span class="o">=</span> <span class="mf">5e-5</span>
 
 <span class="n">num_warmup</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_size</span> <span class="o">//</span> <span class="n">batch_size</span><span class="p">)</span> <span class="o">*</span> <span class="mi">20</span>
@@ -585,13 +576,12 @@ title="Source repository"
 <span class="n">rng_key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">batches</span> <span class="o">=</span> <span class="n">batch_data</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">data_size</span><span class="p">)</span>
 
-<span class="c1"># Build the SGLD kernel with a constant learning rate</span>
-<span class="n">grad_fn</span> <span class="o">=</span> <span class="n">grad_estimator</span><span class="p">(</span><span class="n">logprior_fn</span><span class="p">,</span> <span class="n">loglikelihood_fn</span><span class="p">,</span> <span class="n">data_size</span><span class="p">)</span>
-<span class="n">sgld</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">sgld</span><span class="p">(</span><span class="n">grad_fn</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">step_size</span><span class="p">)</span>
-
 <span class="c1"># Set the initial state</span>
-<span class="n">init_positions</span> <span class="o">=</span> <span class="n">init_parameters</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">layer_sizes</span><span class="p">)</span>
-<span class="n">state</span> <span class="o">=</span> <span class="n">sgld</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">init_positions</span><span class="p">,</span> <span class="nb">next</span><span class="p">(</span><span class="n">batches</span><span class="p">))</span>
+<span class="n">state</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">init</span><span class="p">)(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="c1"># Build the SGLD kernel with a constant learning rate</span>
+<span class="n">grad_fn</span> <span class="o">=</span> <span class="n">gradients</span><span class="o">.</span><span class="n">estimator</span><span class="p">(</span><span class="n">logprior_fn</span><span class="p">,</span> <span class="n">loglikelihood_fn</span><span class="p">,</span> <span class="n">data_size</span><span class="p">)</span>
+<span class="n">sgld</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">sgld</span><span class="p">(</span><span class="n">grad_fn</span><span class="p">)</span>
 
 <span class="c1"># Sample from the posterior</span>
 <span class="n">accuracies</span> <span class="o">=</span> <span class="p">[]</span>
@@ -600,19 +590,24 @@ title="Source repository"
 <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">progress_bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span> <span class="o">+</span> <span class="n">num_warmup</span><span class="p">)):</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">rng_key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng_key</span><span class="p">)</span>
     <span class="n">batch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">batches</span><span class="p">)</span>
-    <span class="n">state</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">sgld</span><span class="o">.</span><span class="n">step</span><span class="p">)(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">sgld</span><span class="p">)(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">step_size</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">accuracy</span> <span class="o">=</span> <span class="n">compute_accuracy</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+        <span class="n">accuracy</span> <span class="o">=</span> <span class="n">compute_accuracy</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
         <span class="n">accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accuracy</span><span class="p">)</span>
         <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">step</span> <span class="o">&gt;</span> <span class="n">num_warmup</span><span class="p">:</span>
-        <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+        <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <p>Let us plot the accuracy at different points in the sampling process:</p>
 <div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
 
@@ -625,24 +620,81 @@ title="Source repository"
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sample from 3-layer MLP posterior (MNIST dataset) with SgLD&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<section id="sampling-with-sghmc">
+<h3>Sampling with SGHMC<a class="headerlink" href="#sampling-with-sghmc" title="Permalink to this headline">#</a></h3>
+<p>We can also use SGHMC to samples from this model</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build the SGHMC kernel with a constant learning rate</span>
+<span class="n">step_size</span> <span class="o">=</span> <span class="mf">9e-6</span>
+<span class="n">grad_fn</span> <span class="o">=</span> <span class="n">gradients</span><span class="o">.</span><span class="n">estimator</span><span class="p">(</span><span class="n">logprior_fn</span><span class="p">,</span> <span class="n">loglikelihood_fn</span><span class="p">,</span> <span class="n">data_size</span><span class="p">)</span>
+<span class="n">sghmc</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">sghmc</span><span class="p">(</span><span class="n">grad_fn</span><span class="p">)</span>
+
+<span class="c1"># Batch the data</span>
+<span class="n">state</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">init</span><span class="p">)(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="c1"># Sample from the posterior</span>
+<span class="n">sghmc_accuracies</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">progress_bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span> <span class="o">+</span> <span class="n">num_warmup</span><span class="p">)):</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">rng_key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng_key</span><span class="p">)</span>
+    <span class="n">minibatch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">batches</span><span class="p">)</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">sghmc</span><span class="p">)(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">minibatch</span><span class="p">,</span> <span class="n">step_size</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">sghmc_accuracy</span> <span class="o">=</span> <span class="n">compute_accuracy</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+        <span class="n">sghmc_accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sghmc_accuracy</span><span class="p">)</span>
+        <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">step</span> <span class="o">&gt;</span> <span class="n">num_warmup</span><span class="p">:</span>
+        <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">ld_plot</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">accuracies</span><span class="p">)</span>
+<span class="n">hmc_plot</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">sghmc_accuracies</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Number of sampling steps&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Prediction accuracy&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_warmup</span> <span class="o">+</span> <span class="n">num_samples</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sample from 3-layer MLP posterior (MNIST dataset)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">((</span><span class="n">ld_plot</span><span class="p">,</span> <span class="n">hmc_plot</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;SGLD&#39;</span><span class="p">,</span> <span class="s1">&#39;SGHMC&#39;</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">,</span> <span class="n">shadow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The average accuracy in the sampling phase is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">accuracies</span><span class="p">[</span><span class="mi">10</span><span class="p">:])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The average accuracy for SGLD in the sampling phase is </span><span class="si">{</span><span class="mi">100</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">accuracies</span><span class="p">[</span><span class="mi">10</span><span class="p">:])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The average accuracy for SGHMC in the sampling phase is </span><span class="si">{</span><span class="mi">100</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sghmc_accuracies</span><span class="p">[</span><span class="mi">10</span><span class="p">:])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>Which is not a bad accuracy at all for such a simple model! Remember though that we draw samples from the posterior distribution of the digit probabilities; we can thus use this information to filter out examples for which the model is “unsure” of its prediction.</p>
 <p>Here we will say that the model is unsure of its prediction for a given image if the digit that is most often predicted for this image is predicted less tham 95% of the time.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">predicted_class</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
-    <span class="n">jnp</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">predict_fn</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))(</span><span class="n">s</span><span class="p">,</span> <span class="n">X_test</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">])</span>
+    <span class="n">jnp</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">apply</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))(</span><span class="n">s</span><span class="p">,</span> <span class="n">X_test</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">])</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -679,17 +731,24 @@ title="Source repository"
 </div>
 <p>And now compute the average accuracy over all the samples without these uncertain predictions:</p>
 <div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">avg_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
     <span class="p">[</span><span class="n">compute_accuracy</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">X_test</span><span class="p">[</span><span class="n">certain_mask</span><span class="p">],</span> <span class="n">y_test</span><span class="p">[</span><span class="n">certain_mask</span><span class="p">])</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">]</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;The average accuracy removing the samples for which the model is uncertain is </span><span class="si">{</span><span class="n">avg_accuracy</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;The average accuracy removing the samples for which the model is uncertain is </span><span class="si">{</span><span class="mi">100</span><span class="o">*</span><span class="n">avg_accuracy</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">%&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
+</section>
 </section>
 </section>
 

@@ -22,8 +22,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
     
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -33,12 +32,7 @@
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -122,8 +116,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="howto_use_pymc.html">
-     Use with PyMC models
+    <a class="reference internal" href="howto_use_oryx.html">
+     Use with Oryx models
     </a>
    </li>
    <li class="toctree-l2">
@@ -136,6 +130,16 @@
  <li class="toctree-l1">
   <a class="reference internal" href="howto_sample_multiple_chains.html">
    Sample with multiple chains?
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="howto_custom_gradients.html">
+   Use custom gradients?
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="howto_other_frameworks.html">
+   Use non-JAX log-prob functions?
   </a>
  </li>
 </ul>
@@ -225,8 +229,23 @@
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../sampling.html">
-   Sampling
+  <a class="reference internal" href="../mcmc.html">
+   MCMC sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sgmcmc.html">
+   Stochastic gradient MCMC
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../smc.html">
+   Sequential Monte Carlo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../vi.html">
+   Variational Inference
   </a>
  </li>
  <li class="toctree-l1">
@@ -418,13 +437,17 @@ title="Source repository"
     p(a, b) &amp;\propto (a+b)^{-5/2}
 \end{align}\end{split}\]</div>
 <div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell content</span>
+<span class="expanded">Hide code cell content</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
 <span class="kn">import</span> <span class="nn">jax</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 
 <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_rows&quot;</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
 
@@ -439,8 +462,14 @@ title="Source repository"
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell content</span>
+<span class="expanded">Hide code cell content</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># index of array is type of tumor and value shows number of total people tested.</span>
 <span class="n">group_size</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
@@ -603,28 +632,49 @@ title="Source repository"
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_rat_tumors</span><span class="p">),</span> <span class="n">n_of_positives</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_rat_tumors</span><span class="p">),</span> <span class="n">n_of_positives</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;tumor type&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;No. of positives for each tumor type&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;tumor type&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_rat_tumors</span><span class="p">),</span> <span class="n">group_size</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_rat_tumors</span><span class="p">),</span> <span class="n">group_size</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Group size for each tumor type&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;tumor type&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;tumor type&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <section id="posterior-sampling">
 <h2>Posterior Sampling<a class="headerlink" href="#posterior-sampling" title="Permalink to this headline">#</a></h2>
@@ -682,19 +732,19 @@ title="Source repository"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
-<span class="n">warmup</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">window_adaptation</span><span class="p">(</span><span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">,</span> <span class="n">joint_logprob</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">warmup</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">window_adaptation</span><span class="p">(</span><span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">,</span> <span class="n">joint_logprob</span><span class="p">)</span>
 
 <span class="c1"># we use 4 chains for sampling</span>
 <span class="n">n_chains</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">keys</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">n_chains</span><span class="p">)</span>
 <span class="n">init_params</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">init_param_fn</span><span class="p">)(</span><span class="n">keys</span><span class="p">)</span>
 
-<span class="n">initial_states</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">:</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">)[</span><span class="mi">0</span><span class="p">])(</span>
-    <span class="n">keys</span><span class="p">,</span> <span class="n">init_params</span>
-<span class="p">)</span>
+<span class="nd">@jax</span><span class="o">.</span><span class="n">vmap</span>
+<span class="k">def</span> <span class="nf">call_warmup</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
+    <span class="n">initial_states</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">tuned_params</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span>
 
-<span class="c1"># can not vectorize kernel, since it is not jax.numpy array</span>
-<span class="n">_</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">init_param_fn</span><span class="p">(</span><span class="n">rng_key</span><span class="p">))</span>
+<span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">call_warmup</span><span class="p">)(</span><span class="n">keys</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -703,12 +753,16 @@ title="Source repository"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">inference_loop_multiple_chains</span><span class="p">(</span>
-    <span class="n">rng_key</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">initial_states</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">,</span> <span class="n">num_chains</span>
+    <span class="n">rng_key</span><span class="p">,</span> <span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span><span class="p">,</span> <span class="n">log_prob_fn</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">,</span> <span class="n">num_chains</span>
 <span class="p">):</span>
-    <span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+    <span class="n">step_fn</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">kernel</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">step_fn</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">log_prob_fn</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">one_step</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">rng_key</span><span class="p">):</span>
         <span class="n">keys</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">num_chains</span><span class="p">)</span>
-        <span class="n">states</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">kernel</span><span class="p">)(</span><span class="n">keys</span><span class="p">,</span> <span class="n">states</span><span class="p">)</span>
+        <span class="n">states</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">kernel</span><span class="p">)(</span><span class="n">keys</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="o">**</span><span class="n">tuned_params</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">states</span><span class="p">,</span> <span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">infos</span><span class="p">)</span>
 
     <span class="n">keys</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">)</span>
@@ -724,7 +778,7 @@ title="Source repository"
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
 <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">states</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">inference_loop_multiple_chains</span><span class="p">(</span>
-    <span class="n">rng_key</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">initial_states</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_chains</span>
+    <span class="n">rng_key</span><span class="p">,</span> <span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span><span class="p">,</span> <span class="n">joint_logprob</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_chains</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -735,6 +789,11 @@ title="Source repository"
 <h2>Arviz Plots<a class="headerlink" href="#arviz-plots" title="Permalink to this headline">#</a></h2>
 <p>We have all our posterior samples stored in <code class="docutils literal notranslate"><span class="pre">states.position</span></code> dictionary and <code class="docutils literal notranslate"><span class="pre">infos</span></code> store additional information like acceptance probability, divergence, etc. Now, we can use certain diagnostics to judge if our MCMC samples are converged on stationary distribution. Some of widely diagnostics are trace plots, potential scale reduction factor (R hat), divergences, etc. <code class="docutils literal notranslate"><span class="pre">Arviz</span></code> library provides quicker ways to anaylze these diagnostics. We can use <code class="docutils literal notranslate"><span class="pre">arviz.summary()</span></code> and <code class="docutils literal notranslate"><span class="pre">arviz_plot_trace()</span></code>, but these functions take specific format (arviz’s trace) as a input.</p>
 <div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell content</span>
+<span class="expanded">Hide code cell content</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">arviz_trace_from_states</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">burn_in</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="n">position</span> <span class="o">=</span> <span class="n">states</span><span class="o">.</span><span class="n">position</span>
@@ -768,8 +827,9 @@ title="Source repository"
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_output-scroll docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># make arviz trace from states</span>
 <span class="n">trace</span> <span class="o">=</span> <span class="n">arviz_trace_from_states</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">infos</span><span class="p">)</span>
@@ -781,12 +841,18 @@ title="Source repository"
 </div>
 <p><strong>r_hat</strong> is showing measure of each chain is converged to stationary distribution. <strong>r_hat</strong> should be less than or equal to 1.01, here we get r_hat far from 1.01 for each latent sample.</p>
 <div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">plot_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>Trace plots also looks terrible and does not seems to be converged! Also, black band shows that every sample is diverged from original distribution. So <strong>what’s wrong happeing here?</strong></p>
 <p>Well, it’s related to support of latent variable. In HMC, the latent variable must be in an unconstrained space, but in above model <code class="docutils literal notranslate"><span class="pre">theta</span></code> is constrained in between 0 to 1. We can use change of variable trick to solve above problem</p>
@@ -837,7 +903,7 @@ title="Source repository"
 </div>
 </div>
 </div>
-<p>except change of variable in <code class="docutils literal notranslate"><span class="pre">joint_logprob()</span></code> function, everthing will remain same</p>
+<p>except for the change of variable in <code class="docutils literal notranslate"><span class="pre">joint_logprob()</span></code> function, everthing will remain same</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rng_key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -864,19 +930,19 @@ title="Source repository"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
-<span class="n">warmup</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">window_adaptation</span><span class="p">(</span><span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">,</span> <span class="n">joint_logprob_change_of_var</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">warmup</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">window_adaptation</span><span class="p">(</span><span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">,</span> <span class="n">joint_logprob_change_of_var</span><span class="p">)</span>
 
 <span class="c1"># we use 4 chains for sampling</span>
 <span class="n">n_chains</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">keys</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">n_chains</span><span class="p">)</span>
 <span class="n">init_params</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">init_param_fn</span><span class="p">)(</span><span class="n">keys</span><span class="p">)</span>
 
-<span class="n">initial_states</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">:</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">)[</span><span class="mi">0</span><span class="p">])(</span>
-    <span class="n">keys</span><span class="p">,</span> <span class="n">init_params</span>
-<span class="p">)</span>
+<span class="nd">@jax</span><span class="o">.</span><span class="n">vmap</span>
+<span class="k">def</span> <span class="nf">call_warmup</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
+    <span class="n">initial_states</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">tuned_params</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span>
 
-<span class="c1"># can not vectorize kernel, since it is not jax.numpy array</span>
-<span class="n">_</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">init_param_fn</span><span class="p">(</span><span class="n">rng_key</span><span class="p">))</span>
+<span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span> <span class="o">=</span> <span class="n">call_warmup</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -886,7 +952,7 @@ title="Source repository"
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
 <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">states</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">inference_loop_multiple_chains</span><span class="p">(</span>
-    <span class="n">rng_key</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">initial_states</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_chains</span>
+    <span class="n">rng_key</span><span class="p">,</span> <span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span><span class="p">,</span> <span class="n">joint_logprob_change_of_var</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_chains</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -914,12 +980,18 @@ title="Source repository"
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">plot_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -981,7 +1053,7 @@ title="Source repository"
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
 <span class="n">rng_key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">warmup</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">window_adaptation</span><span class="p">(</span><span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">,</span> <span class="n">joint_logprob</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">warmup</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">window_adaptation</span><span class="p">(</span><span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">,</span> <span class="n">joint_logprob</span><span class="p">)</span>
 
 <span class="c1"># we use 4 chains for sampling</span>
 <span class="n">n_chains</span> <span class="o">=</span> <span class="mi">4</span>
@@ -989,14 +1061,13 @@ title="Source repository"
 <span class="n">init_params</span> <span class="o">=</span> <span class="n">bijectors</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">pinned</span><span class="o">.</span><span class="n">sample_unpinned</span><span class="p">(</span><span class="n">n_chains</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">init_key</span><span class="p">))</span>
 
 <span class="n">keys</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">warmup_key</span><span class="p">,</span> <span class="n">n_chains</span><span class="p">)</span>
-<span class="n">initial_states</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">:</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">)[</span><span class="mi">0</span><span class="p">])(</span>
-    <span class="n">keys</span><span class="p">,</span> <span class="n">init_params</span>
-<span class="p">)</span>
 
-<span class="c1"># can not vectorize kernel, since it is not jax.numpy array</span>
-<span class="n">_</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-    <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
-    <span class="n">bijectors</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">pinned</span><span class="o">.</span><span class="n">sample_unpinned</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">init_key</span><span class="p">)))</span>
+<span class="nd">@jax</span><span class="o">.</span><span class="n">vmap</span>
+<span class="k">def</span> <span class="nf">call_warmup</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
+    <span class="n">initial_states</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">tuned_params</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span>
+
+<span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span> <span class="o">=</span> <span class="n">call_warmup</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1006,7 +1077,7 @@ title="Source repository"
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
 <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">states</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">inference_loop_multiple_chains</span><span class="p">(</span>
-    <span class="n">rng_key</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">initial_states</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_chains</span>
+    <span class="n">rng_key</span><span class="p">,</span> <span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span><span class="p">,</span> <span class="n">joint_logprob</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_chains</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -1021,7 +1092,7 @@ title="Source repository"
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_output-scroll docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># make arviz trace from states</span>
 <span class="n">trace</span> <span class="o">=</span> <span class="n">arviz_trace_from_states</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">infos</span><span class="p">,</span> <span class="n">burn_in</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -1032,12 +1103,18 @@ title="Source repository"
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">plot_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 </section>
 </section>
