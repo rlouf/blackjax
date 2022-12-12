@@ -435,13 +435,13 @@ title="Source repository"
 <p>This example is inspired form <a class="reference external" href="https://github.com/jeremiecoullon/SGMCMCJax/blob/master/docs/nbs/BNN.ipynb">this notebook</a> in the SGMCMCJax repository. We try to use a 3-layer neural network to recognise the digits in the MNIST dataset.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
-<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
-<span class="kn">import</span> <span class="nn">jax.scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
-<span class="kn">import</span> <span class="nn">flax.linen</span> <span class="k">as</span> <span class="nn">nn</span>
-<span class="kn">import</span> <span class="nn">distrax</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import jax
+import jax.numpy as jnp
+import jax.scipy.stats as stats
+import flax.linen as nn
+import distrax
+import numpy as np
+from functools import partial
 </pre></div>
 </div>
 </div>
@@ -451,15 +451,17 @@ title="Source repository"
 <p>We download the MNIST data using <code class="docutils literal notranslate"><span class="pre">tensorflow-datasets</span></code>:</p>
 <div class="cell tag_remove-stdout tag_remove-stderr docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow_datasets</span> <span class="k">as</span> <span class="nn">tfds</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import tensorflow_datasets as tfds
 
-<span class="n">mnist_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tfds</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mnist&quot;</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">with_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_supervised</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-<span class="n">mnist_data</span> <span class="o">=</span> <span class="n">tfds</span><span class="o">.</span><span class="n">as_numpy</span><span class="p">(</span><span class="n">mnist_data</span><span class="p">)</span>
-<span class="n">data_train</span><span class="p">,</span> <span class="n">data_test</span> <span class="o">=</span> <span class="n">mnist_data</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">],</span> <span class="n">mnist_data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span>
+mnist_data, _ = tfds.load(
+    name=&quot;mnist&quot;, batch_size=-1, with_info=True, as_supervised=True
+)
+mnist_data = tfds.as_numpy(mnist_data)
+data_train, data_test = mnist_data[&quot;train&quot;], mnist_data[&quot;test&quot;]
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
 </div>
 </div>
 <p>Now we need to apply several transformations to the dataset before splitting it into a test and a test set:</p>
@@ -470,38 +472,40 @@ title="Source repository"
 </ul>
 <div class="cell tag_remove-stdout tag_remove-stderr docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">one_hot_encode</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">):</span>
-    <span class="s2">&quot;Create a one-hot encoding of x of size k.&quot;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">dtype</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def one_hot_encode(x, k, dtype=np.float32):
+    &quot;Create a one-hot encoding of x of size k.&quot;
+    return np.array(x[:, None] == np.arange(k), dtype)
 
 
-<span class="k">def</span> <span class="nf">prepare_data</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">num_categories</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
-    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dataset</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">one_hot_encode</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">num_categories</span><span class="p">)</span>
+def prepare_data(dataset: tuple, num_categories=10):
+    X, y = dataset
+    y = one_hot_encode(y, num_categories)
 
-    <span class="n">num_examples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">num_pixels</span> <span class="o">=</span> <span class="mi">28</span> <span class="o">*</span> <span class="mi">28</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">num_examples</span><span class="p">,</span> <span class="n">num_pixels</span><span class="p">)</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">X</span> <span class="o">/</span> <span class="mf">255.0</span>
+    num_examples = X.shape[0]
+    num_pixels = 28 * 28
+    X = X.reshape(num_examples, num_pixels)
+    X = X / 255.0
 
-    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">num_examples</span>
-
-
-<span class="k">def</span> <span class="nf">batch_data</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">data_size</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return an iterator over batches of data.&quot;&quot;&quot;</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">rng_key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng_key</span><span class="p">)</span>
-        <span class="n">idx</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
-            <span class="n">key</span><span class="o">=</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data_size</span><span class="p">),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,)</span>
-        <span class="p">)</span>
-        <span class="n">minibatch</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">elem</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
-        <span class="k">yield</span> <span class="n">minibatch</span>
+    return jnp.array(X), jnp.array(y), num_examples
 
 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">N_train</span> <span class="o">=</span> <span class="n">prepare_data</span><span class="p">(</span><span class="n">data_train</span><span class="p">)</span>
-<span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">N_test</span> <span class="o">=</span> <span class="n">prepare_data</span><span class="p">(</span><span class="n">data_test</span><span class="p">)</span>
+def batch_data(rng_key, data, batch_size, data_size):
+    &quot;&quot;&quot;Return an iterator over batches of data.&quot;&quot;&quot;
+    while True:
+        _, rng_key = jax.random.split(rng_key)
+        idx = jax.random.choice(
+            key=rng_key, a=jnp.arange(data_size), shape=(batch_size,)
+        )
+        minibatch = tuple(elem[idx] for elem in data)
+        yield minibatch
+
+
+X_train, y_train, N_train = prepare_data(data_train)
+X_test, y_test, N_test = prepare_data(data_test)
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
 </div>
 </div>
 </section>
@@ -515,39 +519,39 @@ title="Source repository"
 \end{align*}\end{split}\]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="nd">@nn</span><span class="o">.</span><span class="n">compact</span>
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="mi">100</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="mi">10</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>class NN(nn.Module):
+    @nn.compact
+    def __call__(self, x):
+        x = nn.Dense(features=100)(x)
+        x = nn.softmax(x)
+        x = nn.Dense(features=10)(x)
+        return nn.log_softmax(x)
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">NN</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">logprior_fn</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the value of the log-prior density function.&quot;&quot;&quot;</span>
-    <span class="n">leaves</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree_util</span><span class="o">.</span><span class="n">tree_flatten</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-    <span class="n">flat_params</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">jnp</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">distrax</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">flat_params</span><span class="p">))</span>
+model = NN()
 
 
-<span class="k">def</span> <span class="nf">loglikelihood_fn</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Categorical log-likelihood&quot;&quot;&quot;</span>
-    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span>
-    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">model</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">))</span>
+def logprior_fn(params):
+    &quot;&quot;&quot;Compute the value of the log-prior density function.&quot;&quot;&quot;
+    leaves, _ = jax.tree_util.tree_flatten(params)
+    flat_params = jnp.concatenate([jnp.ravel(a) for a in leaves])
+    return jnp.sum(distrax.Normal(0.0, 1.0).log_prob(flat_params))
 
 
-<span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
-<span class="k">def</span> <span class="nf">compute_accuracy</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the accuracy of the model.</span>
+def loglikelihood_fn(params, data):
+    &quot;&quot;&quot;Categorical log-likelihood&quot;&quot;&quot;
+    X, y = data
+    return jnp.sum(y * model.apply(params, X))
 
-<span class="sd">    To make predictions we take the number that corresponds to the highest probability value.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">target_class</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">predicted_class</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">predicted_class</span> <span class="o">==</span> <span class="n">target_class</span><span class="p">)</span>
+
+@jax.jit
+def compute_accuracy(params, X, y):
+    &quot;&quot;&quot;Compute the accuracy of the model.
+
+    To make predictions we take the number that corresponds to the highest probability value.
+    &quot;&quot;&quot;
+    target_class = jnp.argmax(y, axis=1)
+    predicted_class = jnp.argmax(model.apply(params, X), axis=1)
+    return jnp.mean(predicted_class == target_class)
 </pre></div>
 </div>
 </div>
@@ -559,47 +563,70 @@ title="Source repository"
 <p>We now sample from the model’s posteriors using SGLD. We discard the first 1000 samples until the sampler has reached the typical set, and then take 2000 samples. We record the model’s accuracy with the current values every 100 steps.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fastprogress.fastprogress</span> <span class="kn">import</span> <span class="n">progress_bar</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from fastprogress.fastprogress import progress_bar
 
-<span class="kn">import</span> <span class="nn">blackjax</span>
-<span class="kn">import</span> <span class="nn">blackjax.sgmcmc.gradients</span> <span class="k">as</span> <span class="nn">gradients</span>
+import blackjax
+import blackjax.sgmcmc.gradients as gradients
 
 
-<span class="n">data_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span>
-<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">512</span>
-<span class="n">step_size</span> <span class="o">=</span> <span class="mf">5e-5</span>
+data_size = len(y_train)
+batch_size = 512
+step_size = 5e-5
 
-<span class="n">num_warmup</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_size</span> <span class="o">//</span> <span class="n">batch_size</span><span class="p">)</span> <span class="o">*</span> <span class="mi">20</span>
-<span class="n">num_samples</span> <span class="o">=</span> <span class="mi">1000</span>
+num_warmup = (data_size // batch_size) * 20
+num_samples = 1000
 
-<span class="c1"># Batch the data</span>
-<span class="n">rng_key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">batches</span> <span class="o">=</span> <span class="n">batch_data</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">data_size</span><span class="p">)</span>
+# Batch the data
+rng_key = jax.random.PRNGKey(1)
+batches = batch_data(rng_key, (X_train, y_train), batch_size, data_size)
 
-<span class="c1"># Set the initial state</span>
-<span class="n">state</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">init</span><span class="p">)(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+# Set the initial state
+state = jax.jit(model.init)(rng_key, jnp.ones(X_train.shape[-1]))
 
-<span class="c1"># Build the SGLD kernel with a constant learning rate</span>
-<span class="n">grad_fn</span> <span class="o">=</span> <span class="n">gradients</span><span class="o">.</span><span class="n">estimator</span><span class="p">(</span><span class="n">logprior_fn</span><span class="p">,</span> <span class="n">loglikelihood_fn</span><span class="p">,</span> <span class="n">data_size</span><span class="p">)</span>
-<span class="n">sgld</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">sgld</span><span class="p">(</span><span class="n">grad_fn</span><span class="p">)</span>
+# Build the SGLD kernel with a constant learning rate
+grad_fn = gradients.estimator(logprior_fn, loglikelihood_fn, data_size)
+sgld = blackjax.sgld(grad_fn)
 
-<span class="c1"># Sample from the posterior</span>
-<span class="n">accuracies</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">progress_bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span> <span class="o">+</span> <span class="n">num_warmup</span><span class="p">)):</span>
-    <span class="n">_</span><span class="p">,</span> <span class="n">rng_key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng_key</span><span class="p">)</span>
-    <span class="n">batch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">batches</span><span class="p">)</span>
-    <span class="n">state</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">sgld</span><span class="p">)(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">step_size</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">accuracy</span> <span class="o">=</span> <span class="n">compute_accuracy</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
-        <span class="n">accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accuracy</span><span class="p">)</span>
-        <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">step</span> <span class="o">&gt;</span> <span class="n">num_warmup</span><span class="p">:</span>
-        <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+# Sample from the posterior
+accuracies = []
+samples = []
+steps = []
+for step in progress_bar(range(num_samples + num_warmup)):
+    _, rng_key = jax.random.split(rng_key)
+    batch = next(batches)
+    state = jax.jit(sgld)(rng_key, state, batch, step_size)
+    if step % 100 == 0:
+        accuracy = compute_accuracy(state, X_test, y_test)
+        accuracies.append(accuracy)
+        steps.append(step)
+    if step &gt; num_warmup:
+        samples.append(state)
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='3340' class='' max='3340' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [3340/3340 00:26&lt;00:00]
+    </div>
+    </div></div>
 </div>
 <p>Let us plot the accuracy at different points in the sampling process:</p>
 <div class="cell tag_hide-input docutils container">
@@ -609,70 +636,99 @@ title="Source repository"
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import matplotlib.pylab as plt
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">accuracies</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Number of sampling steps&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Prediction accuracy&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_warmup</span> <span class="o">+</span> <span class="n">num_samples</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sample from 3-layer MLP posterior (MNIST dataset) with SgLD&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">();</span>
+fig = plt.figure(figsize=(12, 8))
+ax = fig.add_subplot(111)
+ax.plot(steps, accuracies)
+ax.set_xlabel(&quot;Number of sampling steps&quot;)
+ax.set_ylabel(&quot;Prediction accuracy&quot;)
+ax.set_xlim([0, num_warmup + num_samples])
+ax.set_ylim([0, 1])
+ax.set_yticks([0.1, 0.3, 0.5, 0.7, 0.9])
+plt.title(&quot;Sample from 3-layer MLP posterior (MNIST dataset) with SgLD&quot;)
+plt.plot();
 </pre></div>
 </div>
 </div>
 </details>
+<div class="cell_output docutils container">
+<img alt="../_images/5615f77337c5be1530eb73e806796df0e88afa45e8c39ed6192b271d9b2d9a71.png" src="../_images/5615f77337c5be1530eb73e806796df0e88afa45e8c39ed6192b271d9b2d9a71.png" />
+</div>
 </div>
 <section id="sampling-with-sghmc">
 <h3>Sampling with SGHMC<a class="headerlink" href="#sampling-with-sghmc" title="Permalink to this headline">#</a></h3>
 <p>We can also use SGHMC to samples from this model</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build the SGHMC kernel with a constant learning rate</span>
-<span class="n">step_size</span> <span class="o">=</span> <span class="mf">9e-6</span>
-<span class="n">grad_fn</span> <span class="o">=</span> <span class="n">gradients</span><span class="o">.</span><span class="n">estimator</span><span class="p">(</span><span class="n">logprior_fn</span><span class="p">,</span> <span class="n">loglikelihood_fn</span><span class="p">,</span> <span class="n">data_size</span><span class="p">)</span>
-<span class="n">sghmc</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">sghmc</span><span class="p">(</span><span class="n">grad_fn</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Build the SGHMC kernel with a constant learning rate
+step_size = 9e-6
+grad_fn = gradients.estimator(logprior_fn, loglikelihood_fn, data_size)
+sghmc = blackjax.sghmc(grad_fn)
 
-<span class="c1"># Batch the data</span>
-<span class="n">state</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">init</span><span class="p">)(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+# Batch the data
+state = jax.jit(model.init)(rng_key, jnp.ones(X_train.shape[-1]))
 
-<span class="c1"># Sample from the posterior</span>
-<span class="n">sghmc_accuracies</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">progress_bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span> <span class="o">+</span> <span class="n">num_warmup</span><span class="p">)):</span>
-    <span class="n">_</span><span class="p">,</span> <span class="n">rng_key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng_key</span><span class="p">)</span>
-    <span class="n">minibatch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">batches</span><span class="p">)</span>
-    <span class="n">state</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">sghmc</span><span class="p">)(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">minibatch</span><span class="p">,</span> <span class="n">step_size</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">sghmc_accuracy</span> <span class="o">=</span> <span class="n">compute_accuracy</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
-        <span class="n">sghmc_accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sghmc_accuracy</span><span class="p">)</span>
-        <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">step</span> <span class="o">&gt;</span> <span class="n">num_warmup</span><span class="p">:</span>
-        <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+# Sample from the posterior
+sghmc_accuracies = []
+samples = []
+steps = []
+for step in progress_bar(range(num_samples + num_warmup)):
+    _, rng_key = jax.random.split(rng_key)
+    minibatch = next(batches)
+    state = jax.jit(sghmc)(rng_key, state, minibatch, step_size)
+    if step % 100 == 0:
+        sghmc_accuracy = compute_accuracy(state, X_test, y_test)
+        sghmc_accuracies.append(sghmc_accuracy)
+        steps.append(step)
+    if step &gt; num_warmup:
+        samples.append(state)
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='3340' class='' max='3340' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [3340/3340 02:27&lt;00:00]
+    </div>
+    </div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
-<span class="n">ld_plot</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">accuracies</span><span class="p">)</span>
-<span class="n">hmc_plot</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">sghmc_accuracies</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Number of sampling steps&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Prediction accuracy&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_warmup</span> <span class="o">+</span> <span class="n">num_samples</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sample from 3-layer MLP posterior (MNIST dataset)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">((</span><span class="n">ld_plot</span><span class="p">,</span> <span class="n">hmc_plot</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;SGLD&#39;</span><span class="p">,</span> <span class="s1">&#39;SGHMC&#39;</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">,</span> <span class="n">shadow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">();</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig = plt.figure(figsize=(12, 8))
+ax = fig.add_subplot(111)
+ld_plot, = ax.plot(steps, accuracies)
+hmc_plot, = ax.plot(steps, sghmc_accuracies)
+ax.set_xlabel(&quot;Number of sampling steps&quot;)
+ax.set_ylabel(&quot;Prediction accuracy&quot;)
+ax.set_xlim([0, num_warmup + num_samples])
+ax.set_ylim([0, 1])
+ax.set_yticks([0.1, 0.3, 0.5, 0.7, 0.9])
+plt.title(&quot;Sample from 3-layer MLP posterior (MNIST dataset)&quot;)
+ax.legend((ld_plot, hmc_plot), (&#39;SGLD&#39;, &#39;SGHMC&#39;), loc=&#39;lower right&#39;, shadow=True)
+plt.plot();
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b515d8fe1152855dc57c026eac92d8a91dbaa32db5f2c986bfba98a01f1bcbd7.png" src="../_images/b515d8fe1152855dc57c026eac92d8a91dbaa32db5f2c986bfba98a01f1bcbd7.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -682,35 +738,41 @@ title="Source repository"
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The average accuracy for SGLD in the sampling phase is </span><span class="si">{</span><span class="mi">100</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">accuracies</span><span class="p">[</span><span class="mi">10</span><span class="p">:])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The average accuracy for SGHMC in the sampling phase is </span><span class="si">{</span><span class="mi">100</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sghmc_accuracies</span><span class="p">[</span><span class="mi">10</span><span class="p">:])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(f&quot;The average accuracy for SGLD in the sampling phase is {100 * np.mean(accuracies[10:]):.2f}%&quot;)
+print(f&quot;The average accuracy for SGHMC in the sampling phase is {100 * np.mean(sghmc_accuracies[10:]):.2f}%&quot;)
 </pre></div>
 </div>
 </div>
 </details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The average accuracy for SGLD in the sampling phase is 92.28%
+The average accuracy for SGHMC in the sampling phase is 93.07%
+</pre></div>
+</div>
+</div>
 </div>
 <p>Which is not a bad accuracy at all for such a simple model! Remember though that we draw samples from the posterior distribution of the digit probabilities; we can thus use this information to filter out examples for which the model is “unsure” of its prediction.</p>
 <p>Here we will say that the model is unsure of its prediction for a given image if the digit that is most often predicted for this image is predicted less tham 95% of the time.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">predicted_class</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
-    <span class="n">jnp</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">apply</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))(</span><span class="n">s</span><span class="p">,</span> <span class="n">X_test</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">])</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>predicted_class = jnp.exp(
+    jnp.stack([jax.vmap(model.apply, in_axes=(None, 0))(s, X_test) for s in samples])
+)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">num_test_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span>
-<span class="n">max_predicted</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">predicted_class</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_test_samples</span><span class="p">)]</span>
-<span class="n">freq_max_predicted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-    <span class="p">[</span>
-        <span class="p">(</span><span class="n">max_predicted</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">max_predicted</span><span class="p">[</span><span class="n">i</span><span class="p">])))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">num_samples</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_test_samples</span><span class="p">)</span>
-    <span class="p">]</span>
-<span class="p">)</span>
-<span class="n">certain_mask</span> <span class="o">=</span> <span class="n">freq_max_predicted</span> <span class="o">&gt;</span> <span class="mf">0.95</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>num_test_samples = len(y_test)
+max_predicted = [np.argmax(predicted_class[:, i, :], axis=1) for i in range(num_test_samples)]
+freq_max_predicted = np.array(
+    [
+        (max_predicted[i] == np.argmax(np.bincount(max_predicted[i]))).sum() / num_samples
+        for i in range(num_test_samples)
+    ]
+)
+certain_mask = freq_max_predicted &gt; 0.95
 </pre></div>
 </div>
 </div>
@@ -718,15 +780,39 @@ title="Source repository"
 <p>Let’s plot a few examples where the model was very uncertain:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">most_uncertain_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">freq_max_predicted</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>most_uncertain_idx = np.argsort(freq_max_predicted)
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">max_predicted</span><span class="p">[</span><span class="n">most_uncertain_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span> <span class="o">/</span> <span class="mi">2000</span><span class="p">)</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">X_test</span><span class="p">[</span><span class="n">most_uncertain_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+for i in range(10):
+    print(np.bincount(max_predicted[most_uncertain_idx[i]]) / 2000)
+    fig = plt.figure()
+    plt.imshow(X_test[most_uncertain_idx[i]].reshape(28, 28), cmap=&quot;gray&quot;)
+    plt.show()
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.     0.     0.065  0.047  0.0005 0.0015 0.0985 0.     0.123  0.164 ]
+[0.126  0.     0.0775 0.116  0.     0.0075 0.     0.0005 0.0075 0.1645]
+[0.     0.089  0.0025 0.003  0.169  0.     0.     0.103  0.0505 0.0825]
+[0.109  0.     0.0705 0.     0.     0.     0.1695 0.     0.     0.1505]
+[0.     0.     0.016  0.     0.174  0.036  0.     0.005  0.124  0.1445]
+[0.1635 0.     0.049  0.     0.1745 0.0085 0.     0.     0.103  0.001 ]
+[0.     0.     0.     0.     0.     0.     0.     0.153  0.175  0.1715]
+[0.     0.003  0.07   0.176  0.001  0.002  0.     0.0795 0.0115 0.1565]
+[0.     0.017  0.002  0.     0.0005 0.     0.1765 0.     0.172  0.1315]
+[0.     0.     0.     0.1045 0.     0.142  0.     0.033  0.0425 0.1775]
+</pre></div>
+</div>
+<img alt="../_images/226a179c6221db5aac928153b58ccea93e0c143daa1f0bd4afcfab8110aed1c7.png" src="../_images/226a179c6221db5aac928153b58ccea93e0c143daa1f0bd4afcfab8110aed1c7.png" />
+<img alt="../_images/bf26835ee5d9c2802afe7756b59ec2a11e49ae061bf0734a47957457a309b39d.png" src="../_images/bf26835ee5d9c2802afe7756b59ec2a11e49ae061bf0734a47957457a309b39d.png" />
+<img alt="../_images/441e5a73db84c3780f830d83395d095c9f1348dec7e559ecd23ebdf5ac7e27c7.png" src="../_images/441e5a73db84c3780f830d83395d095c9f1348dec7e559ecd23ebdf5ac7e27c7.png" />
+<img alt="../_images/76039fa436eaaf1090ac269cfd1fc5c5794b97c5832fba9119b8ad159be623c1.png" src="../_images/76039fa436eaaf1090ac269cfd1fc5c5794b97c5832fba9119b8ad159be623c1.png" />
+<img alt="../_images/6855e3aa4c8c81f140ffc5a2d033698f4dc3eefb62148ff23a620e3f495f84ff.png" src="../_images/6855e3aa4c8c81f140ffc5a2d033698f4dc3eefb62148ff23a620e3f495f84ff.png" />
+<img alt="../_images/cefc856455fb943841a2e668aa5a23207525cb612f6d3dc22a350b45646ebab3.png" src="../_images/cefc856455fb943841a2e668aa5a23207525cb612f6d3dc22a350b45646ebab3.png" />
+<img alt="../_images/ec60a9ded29b0f876ba0877c10a71392b131382d2dfb60d6b8717998ba6f1517.png" src="../_images/ec60a9ded29b0f876ba0877c10a71392b131382d2dfb60d6b8717998ba6f1517.png" />
+<img alt="../_images/d935d22b27e73e79a0567c9efbdf018686da6ed81abfe21cb98184dadf280afd.png" src="../_images/d935d22b27e73e79a0567c9efbdf018686da6ed81abfe21cb98184dadf280afd.png" />
+<img alt="../_images/ec80073e8f457b49820f62d9f7a9b6cdc1cdeb43464b6e102eae9adb7df39955.png" src="../_images/ec80073e8f457b49820f62d9f7a9b6cdc1cdeb43464b6e102eae9adb7df39955.png" />
+<img alt="../_images/58f39b7a8eb71b0d4fb4c4dfb69abae6125d73ea40f984f961084fa14fbe1aa0.png" src="../_images/58f39b7a8eb71b0d4fb4c4dfb69abae6125d73ea40f984f961084fa14fbe1aa0.png" />
 </div>
 </div>
 <p>And now compute the average accuracy over all the samples without these uncertain predictions:</p>
@@ -737,16 +823,21 @@ title="Source repository"
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">avg_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
-    <span class="p">[</span><span class="n">compute_accuracy</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">X_test</span><span class="p">[</span><span class="n">certain_mask</span><span class="p">],</span> <span class="n">y_test</span><span class="p">[</span><span class="n">certain_mask</span><span class="p">])</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">]</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;The average accuracy removing the samples for which the model is uncertain is </span><span class="si">{</span><span class="mi">100</span><span class="o">*</span><span class="n">avg_accuracy</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">%&quot;</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>avg_accuracy = np.mean(
+    [compute_accuracy(s, X_test[certain_mask], y_test[certain_mask]) for s in samples]
+)
+print(
+    f&quot;The average accuracy removing the samples for which the model is uncertain is {100*avg_accuracy:.3f}%&quot;
+)
 </pre></div>
 </div>
 </div>
 </details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The average accuracy removing the samples for which the model is uncertain is 98.514%
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 </section>
