@@ -195,6 +195,11 @@
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="GP_Marginal.html">
+     Bayesian Regression With Latent Gaussian Sampler
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="SGMCMC.html">
      MNIST Digit Recognition With a 3-Layer Perceptron
     </a>
@@ -633,8 +638,8 @@ vv_kernel = jax.jit(vv_kernel)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 236 ms, sys: 3.99 ms, total: 240 ms
-Wall time: 240 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 301 ms, sys: 4.21 ms, total: 306 ms
+Wall time: 305 ms
 </pre></div>
 </div>
 </div>
@@ -651,8 +656,8 @@ weights = states.weights
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.01 s, sys: 3.84 ms, total: 1.01 s
-Wall time: 1.01 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.36 s, sys: 44 ms, total: 1.41 s
+Wall time: 1.41 s
 </pre></div>
 </div>
 </div>
@@ -683,8 +688,8 @@ ml_kernel = jax.jit(ml_kernel)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 16 ms, sys: 8 µs, total: 16 ms
-Wall time: 17.1 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 19.9 ms, sys: 0 ns, total: 19.9 ms
+Wall time: 19.5 ms
 </pre></div>
 </div>
 </div>
@@ -701,8 +706,8 @@ weights = states.weights
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 928 ms, sys: 12 ms, total: 940 ms
-Wall time: 937 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.18 s, sys: 7.82 ms, total: 1.18 s
+Wall time: 1.18 s
 </pre></div>
 </div>
 </div>
@@ -739,8 +744,8 @@ yo_kernel = jax.jit(yo_kernel)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 16 ms, sys: 12 µs, total: 16 ms
-Wall time: 15.8 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 19.4 ms, sys: 212 µs, total: 19.6 ms
+Wall time: 19.5 ms
 </pre></div>
 </div>
 </div>
@@ -757,8 +762,8 @@ weights = states.weights
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 923 ms, sys: 7.72 ms, total: 931 ms
-Wall time: 930 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.17 s, sys: 84 µs, total: 1.17 s
+Wall time: 1.17 s
 </pre></div>
 </div>
 </div>
@@ -839,8 +844,8 @@ ellip_kernel = jax.jit(ellip_kernel)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 16.5 ms, sys: 25 µs, total: 16.5 ms
-Wall time: 17.4 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 25.1 ms, sys: 57 µs, total: 25.1 ms
+Wall time: 24.6 ms
 </pre></div>
 </div>
 </div>
@@ -857,8 +862,8 @@ weights = states.weights
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 760 ms, sys: 3.8 ms, total: 764 ms
-Wall time: 760 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.06 s, sys: 0 ns, total: 1.06 s
+Wall time: 1.05 s
 </pre></div>
 </div>
 </div>
@@ -1013,8 +1018,8 @@ parameters, nelbo = param_optim(
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.51 s, sys: 15.6 ms, total: 1.52 s
-Wall time: 1.52 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.92 s, sys: 12 ms, total: 1.93 s
+Wall time: 1.93 s
 </pre></div>
 </div>
 </div>
@@ -1035,7 +1040,7 @@ plt.show()
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/c75418a6e2ed34dd23dea88ce6577681b381cb710bfa92b62567d1665eba7347.png" src="../_images/c75418a6e2ed34dd23dea88ce6577681b381cb710bfa92b62567d1665eba7347.png" />
+<img alt="../_images/47f8eddf54a3ce273e02c517912d17ad61e58ea708b3dff11fb6f4e6844f1d69.png" src="../_images/47f8eddf54a3ce273e02c517912d17ad61e58ea708b3dff11fb6f4e6844f1d69.png" />
 </div>
 </div>
 <p>We define our log pullback given the learned parameters of the transformation and use the periodic orbital MCMC with an ellipsis to sample from this log pullback density.</p>
@@ -1059,8 +1064,8 @@ ellip_kernel = jax.jit(ellip_kernel)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 648 ms, sys: 4.01 ms, total: 652 ms
-Wall time: 650 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 783 ms, sys: 4.12 ms, total: 787 ms
+Wall time: 786 ms
 </pre></div>
 </div>
 </div>
@@ -1077,8 +1082,8 @@ weights = states.weights
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 917 ms, sys: 7.85 ms, total: 925 ms
-Wall time: 924 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.23 s, sys: 3.87 ms, total: 1.24 s
+Wall time: 1.23 s
 </pre></div>
 </div>
 </div>
@@ -1119,7 +1124,7 @@ samples = {&quot;x1&quot;: samplesx1, &quot;x2&quot;: samplesx2}
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/7bec019bc02b19b392723456cad5385b9a69123c0d014f0e9310450a023b136a.png" src="../_images/7bec019bc02b19b392723456cad5385b9a69123c0d014f0e9310450a023b136a.png" />
+<img alt="../_images/55330dafc4092dc467e93bbc666e7a8b027f84b94ebaf38cf801ff3f967fe1bb.png" src="../_images/55330dafc4092dc467e93bbc666e7a8b027f84b94ebaf38cf801ff3f967fe1bb.png" />
 </div>
 </div>
 </section>

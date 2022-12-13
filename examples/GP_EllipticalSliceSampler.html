@@ -36,7 +36,7 @@
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="MNIST Digit Recognition With a 3-Layer Perceptron" href="SGMCMC.html" />
+    <link rel="next" title="Bayesian Regression With Latent Gaussian Sampler" href="GP_Marginal.html" />
     <link rel="prev" title="Periodic Orbital MCMC" href="PeriodicOrbitalMCMC.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -192,6 +192,11 @@
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
      Gaussian Regression with the Elliptical Slice Sampler
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="GP_Marginal.html">
+     Bayesian Regression With Latent Gaussian Sampler
     </a>
    </li>
    <li class="toctree-l2">
@@ -414,7 +419,7 @@ title="Source repository"
 \mathbf{y}|\mathbf{f} &amp;\sim N(\mathbf{f}, \sigma^2\mathbb{I}) \\
 \mathbf{f} &amp;\sim GP(0, \Sigma),
 \end{align*}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\Sigma\)</span> is a covariance function of the feature vector derived from the squared exponential kenel. Thus, for any pair of observations <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span> the covariance of these two observations is given by</p>
+<p>where <span class="math notranslate nohighlight">\(\Sigma\)</span> is a covariance function of the feature vector derived from the squared exponential kernel. Thus, for any pair of observations <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span> the covariance of these two observations is given by</p>
 <div class="math notranslate nohighlight">
 \[\Sigma_{i,j} = \sigma^2_f \exp\left(-\frac{||\mathbf{X}_{i, \cdot} - \mathbf{X}_{j, \cdot}||^2}{2 l^2}\right)\]</div>
 <p>for some lengthscale parameter <span class="math notranslate nohighlight">\(l\)</span> and signal variance parameter <span class="math notranslate nohighlight">\(\sigma_f^2\)</span>.</p>
@@ -541,8 +546,8 @@ samples = states.position[n_warm:]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 7.65 s, sys: 183 ms, total: 7.83 s
-Wall time: 7.45 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 11.2 s, sys: 344 ms, total: 11.5 s
+Wall time: 11.4 s
 </pre></div>
 </div>
 </div>
@@ -561,8 +566,8 @@ states, _ = inference_loop(key_sample, state, kernel, n_iter)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1min 49s, sys: 176 ms, total: 1min 49s
-Wall time: 1min 49s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2min 2s, sys: 245 ms, total: 2min 3s
+Wall time: 2min 3s
 </pre></div>
 </div>
 </div>
@@ -682,10 +687,10 @@ plt.show()
             <p class="prev-next-title">Periodic Orbital MCMC</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="SGMCMC.html" title="next page">
+    <a class='right-next' id="next-link" href="GP_Marginal.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">MNIST Digit Recognition With a 3-Layer Perceptron</p>
+        <p class="prev-next-title">Bayesian Regression With Latent Gaussian Sampler</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

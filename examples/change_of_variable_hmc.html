@@ -195,6 +195,11 @@
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="GP_Marginal.html">
+     Bayesian Regression With Latent Gaussian Sampler
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="SGMCMC.html">
      MNIST Digit Recognition With a 3-Layer Perceptron
     </a>
@@ -768,8 +773,8 @@ initial_states, tuned_params = jax.jit(call_warmup)(keys, init_params)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 9.27 s, sys: 80.5 ms, total: 9.35 s
-Wall time: 9.33 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 13.6 s, sys: 112 ms, total: 13.7 s
+Wall time: 13.7 s
 </pre></div>
 </div>
 </div>
@@ -809,8 +814,8 @@ states, infos = inference_loop_multiple_chains(
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 8.23 s, sys: 31.8 ms, total: 8.26 s
-Wall time: 8.25 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 10.5 s, sys: 52.1 ms, total: 10.5 s
+Wall time: 10.5 s
 </pre></div>
 </div>
 </div>
@@ -1896,8 +1901,8 @@ initial_states, tuned_params = call_warmup(keys, init_params)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 10.8 s, sys: 12.1 ms, total: 10.8 s
-Wall time: 10.8 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 14.1 s, sys: 36 ms, total: 14.1 s
+Wall time: 14.1 s
 </pre></div>
 </div>
 </div>
@@ -1913,8 +1918,8 @@ states, infos = inference_loop_multiple_chains(
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 7.92 s, sys: 16 ms, total: 7.94 s
-Wall time: 7.93 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 11.9 s, sys: 40.1 ms, total: 12 s
+Wall time: 12 s
 </pre></div>
 </div>
 </div>
@@ -2951,8 +2956,8 @@ initial_states, tuned_params = call_warmup(keys, init_params)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 13.9 s, sys: 60 ms, total: 14 s
-Wall time: 14 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 18.7 s, sys: 92.1 ms, total: 18.8 s
+Wall time: 18.8 s
 </pre></div>
 </div>
 </div>
@@ -2968,8 +2973,8 @@ states, infos = inference_loop_multiple_chains(
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 8.17 s, sys: 23.9 ms, total: 8.2 s
-Wall time: 8.19 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 11.4 s, sys: 72.2 ms, total: 11.4 s
+Wall time: 11.4 s
 </pre></div>
 </div>
 </div>
