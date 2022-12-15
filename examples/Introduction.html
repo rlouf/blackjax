@@ -549,10 +549,10 @@ initial_state
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:jax._src.lib.xla_bridge:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HMCState(position={&#39;loc&#39;: 1.0, &#39;log_scale&#39;: 1.0}, potential_energy=DeviceArray(34546.03, dtype=float32), potential_energy_grad={&#39;loc&#39;: DeviceArray(-1314.8121, dtype=float32, weak_type=True), &#39;log_scale&#39;: DeviceArray(-64254.18, dtype=float32, weak_type=True)})
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HMCState(position={&#39;loc&#39;: 1.0, &#39;log_scale&#39;: 1.0}, potential_energy=Array(35894.18, dtype=float32), potential_energy_grad={&#39;loc&#39;: Array(-1280.7173, dtype=float32, weak_type=True), &#39;log_scale&#39;: Array(-66950.49, dtype=float32, weak_type=True)})
 </pre></div>
 </div>
 </div>
@@ -600,8 +600,8 @@ scale_samples = jnp.exp(states.position[&quot;log_scale&quot;])
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.63 s, sys: 11.7 ms, total: 1.64 s
-Wall time: 1.64 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.4 s, sys: 8.33 ms, total: 1.41 s
+Wall time: 1.4 s
 </pre></div>
 </div>
 </div>
@@ -629,7 +629,7 @@ ax1.set_ylabel(&quot;scale&quot;)
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;scale&#39;)
 </pre></div>
 </div>
-<img alt="../_images/2b19738d5af9f8453e62ff800acd431e85e653df1bec3b1bad7c9b18445747c6.png" src="../_images/2b19738d5af9f8453e62ff800acd431e85e653df1bec3b1bad7c9b18445747c6.png" />
+<img alt="../_images/3e671a8aa021c9741ad32e5fd802766e11cf8308e7efdce11ca57593542b388a.png" src="../_images/3e671a8aa021c9741ad32e5fd802766e11cf8308e7efdce11ca57593542b388a.png" />
 </div>
 </div>
 </section>
@@ -656,7 +656,7 @@ initial_state
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HMCState(position={&#39;loc&#39;: 1.0, &#39;log_scale&#39;: 1.0}, potential_energy=DeviceArray(34546.03, dtype=float32), potential_energy_grad={&#39;loc&#39;: DeviceArray(-1314.8121, dtype=float32, weak_type=True), &#39;log_scale&#39;: DeviceArray(-64254.18, dtype=float32, weak_type=True)})
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HMCState(position={&#39;loc&#39;: 1.0, &#39;log_scale&#39;: 1.0}, potential_energy=Array(35894.18, dtype=float32), potential_energy_grad={&#39;loc&#39;: Array(-1280.7173, dtype=float32, weak_type=True), &#39;log_scale&#39;: Array(-66950.49, dtype=float32, weak_type=True)})
 </pre></div>
 </div>
 </div>
@@ -673,8 +673,8 @@ scale_samples = jnp.exp(states.position[&quot;log_scale&quot;])
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 7.56 s, sys: 30.4 ms, total: 7.59 s
-Wall time: 7.6 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 6.45 s, sys: 31.5 ms, total: 6.48 s
+Wall time: 6.48 s
 </pre></div>
 </div>
 </div>
@@ -702,7 +702,7 @@ ax1.set_ylabel(&quot;scale&quot;)
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;scale&#39;)
 </pre></div>
 </div>
-<img alt="../_images/79679b63c4e9478fbd261cc6a0af5c591bb349e58af78953a2e12a1becee7ada.png" src="../_images/79679b63c4e9478fbd261cc6a0af5c591bb349e58af78953a2e12a1becee7ada.png" />
+<img alt="../_images/e3775de257f9f12f73af55fe027b670815c3980f62d0d56ee7efe0e4df87d634.png" src="../_images/e3775de257f9f12f73af55fe027b670815c3980f62d0d56ee7efe0e4df87d634.png" />
 </div>
 </div>
 <section id="use-stan-s-window-adaptation">
@@ -719,8 +719,8 @@ state, kernel, _ = warmup.run(rng_key, initial_position, num_steps=1000)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.77 s, sys: 60 ms, total: 2.83 s
-Wall time: 2.83 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.34 s, sys: 39.5 ms, total: 2.38 s
+Wall time: 2.38 s
 </pre></div>
 </div>
 </div>
@@ -738,8 +738,8 @@ scale_samples = jnp.exp(states.position[&quot;log_scale&quot;])
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.21 s, sys: 15.7 ms, total: 2.23 s
-Wall time: 2.23 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.77 s, sys: 3.56 ms, total: 1.77 s
+Wall time: 1.77 s
 </pre></div>
 </div>
 </div>
@@ -767,7 +767,7 @@ ax1.set_ylabel(&quot;scale&quot;)
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;scale&#39;)
 </pre></div>
 </div>
-<img alt="../_images/ac94e9c18ab974ebc1c382a10efc90eeba7632322f8e1e55517a3ba3cac2cb68.png" src="../_images/ac94e9c18ab974ebc1c382a10efc90eeba7632322f8e1e55517a3ba3cac2cb68.png" />
+<img alt="../_images/711d789b8aea936f905cd07633c99bb8c702f5ba43591beed997eacfc9490540.png" src="../_images/711d789b8aea936f905cd07633c99bb8c702f5ba43591beed997eacfc9490540.png" />
 </div>
 </div>
 </section>

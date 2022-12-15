@@ -638,7 +638,7 @@ n_rat_tumors = len(group_size)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:jax._src.lib.xla_bridge:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
 </pre></div>
 </div>
 </div>
@@ -747,7 +747,7 @@ joint_logprob(init_param)  # sanity check
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DeviceArray(-1123.4977, dtype=float32)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array(-1123.4977, dtype=float32)
 </pre></div>
 </div>
 </div>
@@ -773,8 +773,8 @@ initial_states, tuned_params = jax.jit(call_warmup)(keys, init_params)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 11.4 s, sys: 34.3 ms, total: 11.4 s
-Wall time: 11.4 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 9.13 s, sys: 89.2 ms, total: 9.22 s
+Wall time: 9.19 s
 </pre></div>
 </div>
 </div>
@@ -814,8 +814,8 @@ states, infos = inference_loop_multiple_chains(
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 10.2 s, sys: 35.8 ms, total: 10.3 s
-Wall time: 10.3 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 7.88 s, sys: 28.6 ms, total: 7.91 s
+Wall time: 7.9 s
 </pre></div>
 </div>
 </div>
@@ -1876,7 +1876,7 @@ joint_logprob_change_of_var(init_param)  # sanity check
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DeviceArray(-1022.78735, dtype=float32)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array(-1022.78735, dtype=float32)
 </pre></div>
 </div>
 </div>
@@ -1901,8 +1901,8 @@ initial_states, tuned_params = call_warmup(keys, init_params)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 13.3 s, sys: 15.5 ms, total: 13.3 s
-Wall time: 13.3 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 10.7 s, sys: 8 ms, total: 10.7 s
+Wall time: 10.7 s
 </pre></div>
 </div>
 </div>
@@ -1918,8 +1918,8 @@ states, infos = inference_loop_multiple_chains(
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 9.85 s, sys: 39.9 ms, total: 9.89 s
-Wall time: 9.89 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 7.91 s, sys: 20.2 ms, total: 7.93 s
+Wall time: 7.92 s
 </pre></div>
 </div>
 </div>
@@ -2956,8 +2956,8 @@ initial_states, tuned_params = call_warmup(keys, init_params)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 16.9 s, sys: 79.9 ms, total: 16.9 s
-Wall time: 16.9 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 13.9 s, sys: 76.3 ms, total: 14 s
+Wall time: 13.9 s
 </pre></div>
 </div>
 </div>
@@ -2973,8 +2973,8 @@ states, infos = inference_loop_multiple_chains(
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 10.1 s, sys: 47.9 ms, total: 10.2 s
-Wall time: 10.2 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 8.27 s, sys: 31.9 ms, total: 8.3 s
+Wall time: 8.29 s
 </pre></div>
 </div>
 </div>
