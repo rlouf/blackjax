@@ -121,6 +121,11 @@
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="howto_use_pymc.html">
+     Use with PyMC models
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="howto_use_tfp.html">
      Use with TFP models
     </a>
@@ -539,7 +544,7 @@ title="Source repository"
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/53f1224e301e29ec249249807443c8f9a19b4515a29d5796023cb8ba1e537512.png" src="../_images/53f1224e301e29ec249249807443c8f9a19b4515a29d5796023cb8ba1e537512.png" />
+<img alt="../_images/c7a873c8ca4d889925d7ba56d768e11ba825d42b64e7b208b1fa315ddb9a301b.png" src="../_images/c7a873c8ca4d889925d7ba56d768e11ba825d42b64e7b208b1fa315ddb9a301b.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -598,7 +603,7 @@ title="Source repository"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
 </pre></div>
 </div>
 </div>
@@ -675,7 +680,7 @@ title="Source repository"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fit_and_eval</span><span class="p">(</span>
-    <span class="n">rng_key</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">logprob_fn</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">n_groups</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">rng_key</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">logdensity_fn</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">n_groups</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
     <span class="n">init_key</span><span class="p">,</span> <span class="n">warmup_key</span><span class="p">,</span> <span class="n">inference_key</span><span class="p">,</span> <span class="n">train_key</span><span class="p">,</span> <span class="n">test_key</span><span class="p">,</span> <span class="n">grid_key</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span>
         <span class="n">rng_key</span><span class="p">,</span> <span class="mi">6</span>
@@ -687,7 +692,7 @@ title="Source repository"
         <span class="n">initial_position</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
 
     <span class="c1"># initialization</span>
-    <span class="n">logprob</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">logprob_fn</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">Y_train</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">logprob</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">logdensity_fn</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">Y_train</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
 
     <span class="c1"># warm up</span>
     <span class="n">adapt</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">window_adaptation</span><span class="p">(</span><span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">,</span> <span class="n">logprob</span><span class="p">)</span>
@@ -771,7 +776,7 @@ and compute the posterior for all the weights.</p>
     <span class="n">logits</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">distrax</span><span class="o">.</span><span class="n">Bernoulli</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">Y</span><span class="p">))</span>
 
-<span class="k">def</span> <span class="nf">logprob_fn_of_bnn</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">logdensity_fn_of_bnn</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">logprior_fn</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">+</span> <span class="n">loglikelihood_fn</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -785,7 +790,7 @@ and compute the posterior for all the weights.</p>
 
 <span class="k">def</span> <span class="nf">fit_and_eval_single_mlp</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">fit_and_eval</span><span class="p">(</span>
-        <span class="n">key</span><span class="p">,</span> <span class="n">bnn</span><span class="p">,</span> <span class="n">logprob_fn_of_bnn</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">n_groups</span><span class="o">=</span><span class="kc">None</span>
+        <span class="n">key</span><span class="p">,</span> <span class="n">bnn</span><span class="p">,</span> <span class="n">logdensity_fn_of_bnn</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">n_groups</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span>
 
 <span class="n">Ys_pred_train</span><span class="p">,</span> <span class="n">Ys_pred_test</span><span class="p">,</span> <span class="n">ppc_grid_single</span> <span class="o">=</span> <span class="n">vmap</span><span class="p">(</span><span class="n">fit_and_eval_single_mlp</span><span class="p">)(</span>
@@ -811,7 +816,7 @@ and compute the posterior for all the weights.</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Train accuracy = 87.00%
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Train accuracy = 86.89%
 </pre></div>
 </div>
 </div>
@@ -829,7 +834,7 @@ and compute the posterior for all the weights.</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test accuracy = 82.22%
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test accuracy = 81.89%
 </pre></div>
 </div>
 </div>
@@ -878,7 +883,7 @@ and compute the posterior for all the weights.</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/bbc2f9aafcc2c7632c8b05fb6da4a31f7128f5cd6f41e7ba1415f86cd5834a0a.png" src="../_images/bbc2f9aafcc2c7632c8b05fb6da4a31f7128f5cd6f41e7ba1415f86cd5834a0a.png" />
+<img alt="../_images/18b711d4161603d3b7ec4a343b38f70d454514cf90ccdeecd873236b3800fbc6.png" src="../_images/18b711d4161603d3b7ec4a343b38f70d454514cf90ccdeecd873236b3800fbc6.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -894,7 +899,7 @@ and compute the posterior for all the weights.</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/16a340a67b265531c1941f87ad9bdffafc8578e31acb12d3108c8cac42c00301.png" src="../_images/16a340a67b265531c1941f87ad9bdffafc8578e31acb12d3108c8cac42c00301.png" />
+<img alt="../_images/7569cf79af0b1dec78c48083bc1a53d727deec558a881238566d8f7a9e3ab239.png" src="../_images/7569cf79af0b1dec78c48083bc1a53d727deec558a881238566d8f7a9e3ab239.png" />
 </div>
 </div>
 </section>
@@ -965,7 +970,7 @@ $$</p>
     <span class="n">logits</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">distrax</span><span class="o">.</span><span class="n">Bernoulli</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">Y</span><span class="p">)))</span>
 
-<span class="k">def</span> <span class="nf">logprob_fn_of_hnn</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">logdensity_fn_of_hnn</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">logprior_fn_of_hnn</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">+</span> <span class="n">loglikelihood_fn</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -979,7 +984,7 @@ $$</p>
 <span class="n">Ys_hierarchical_pred_train</span><span class="p">,</span> <span class="n">Ys_hierarchical_pred_test</span><span class="p">,</span> <span class="n">ppc_grid</span> <span class="o">=</span> <span class="n">fit_and_eval</span><span class="p">(</span>
     <span class="n">rng_key</span><span class="p">,</span>
     <span class="n">hnn</span><span class="p">,</span>
-    <span class="n">logprob_fn_of_hnn</span><span class="p">,</span>
+    <span class="n">logdensity_fn_of_hnn</span><span class="p">,</span>
     <span class="n">Xs_train</span><span class="p">,</span>
     <span class="n">Ys_train</span><span class="p">,</span>
     <span class="n">Xs_test</span><span class="p">,</span>
@@ -990,8 +995,8 @@ $$</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3min 17s, sys: 4.64 s, total: 3min 22s
-Wall time: 3min 19s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2min 31s, sys: 2.98 s, total: 2min 34s
+Wall time: 2min 34s
 </pre></div>
 </div>
 </div>

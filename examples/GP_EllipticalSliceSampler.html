@@ -121,6 +121,11 @@
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="howto_use_pymc.html">
+     Use with PyMC models
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="howto_use_tfp.html">
      Use with TFP models
     </a>
@@ -493,7 +498,7 @@ title="Source repository"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
 </pre></div>
 </div>
 </div>
@@ -546,8 +551,8 @@ title="Source repository"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 9.74 s, sys: 190 ms, total: 9.93 s
-Wall time: 9.3 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 7.22 s, sys: 214 ms, total: 7.43 s
+Wall time: 7.04 s
 </pre></div>
 </div>
 </div>
@@ -557,8 +562,8 @@ Wall time: 9.3 s
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
 <span class="n">n_iter</span> <span class="o">=</span> <span class="mi">2000</span>
 
-<span class="n">logprob_fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">loglikelihood_fn</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">f</span> <span class="o">@</span> <span class="n">invSigma</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-<span class="n">warmup</span> <span class="o">=</span> <span class="n">window_adaptation</span><span class="p">(</span><span class="n">nuts</span><span class="p">,</span> <span class="n">logprob_fn</span><span class="p">,</span> <span class="n">n_warm</span><span class="p">,</span> <span class="n">target_acceptance_rate</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">logdensity_fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">loglikelihood_fn</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">f</span> <span class="o">@</span> <span class="n">invSigma</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+<span class="n">warmup</span> <span class="o">=</span> <span class="n">window_adaptation</span><span class="p">(</span><span class="n">nuts</span><span class="p">,</span> <span class="n">logdensity_fn</span><span class="p">,</span> <span class="n">n_warm</span><span class="p">,</span> <span class="n">target_acceptance_rate</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
 <span class="n">key_warm</span><span class="p">,</span> <span class="n">key_sample</span> <span class="o">=</span> <span class="n">jrnd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">jrnd</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
 <span class="n">state</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">key_warm</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
 <span class="n">states</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">inference_loop</span><span class="p">(</span><span class="n">key_sample</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">n_iter</span><span class="p">)</span>
@@ -566,8 +571,8 @@ Wall time: 9.3 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2min 13s, sys: 172 ms, total: 2min 13s
-Wall time: 2min 13s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1min 39s, sys: 175 ms, total: 1min 39s
+Wall time: 1min 40s
 </pre></div>
 </div>
 </div>
@@ -584,7 +589,7 @@ Wall time: 2min 13s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean squared error for the mean vector 0.000144610385177657 and covariance matrix 1.8344444185913744e-07
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean squared error for the mean vector 0.00018483595340512693 and covariance matrix 1.9054485278502398e-07
 </pre></div>
 </div>
 </div>
@@ -617,7 +622,7 @@ Wall time: 2min 13s
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/be155df2e497e458ebe2aed4c605aae569bb63b97a535671df59c7d101d3afa8.png" src="../_images/be155df2e497e458ebe2aed4c605aae569bb63b97a535671df59c7d101d3afa8.png" />
+<img alt="../_images/5b4a2ffbcc79322c1f833f64c193ed54c78d6affb07d8c68a44e62cb15b827dc.png" src="../_images/5b4a2ffbcc79322c1f833f64c193ed54c78d6affb07d8c68a44e62cb15b827dc.png" />
 </div>
 </div>
 </section>
@@ -644,7 +649,7 @@ Wall time: 2min 13s
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/e58f251761e3c06bc4dba09d11e0dd59eb2ae597cae2298e65d1cf7dbcdd1765.png" src="../_images/e58f251761e3c06bc4dba09d11e0dd59eb2ae597cae2298e65d1cf7dbcdd1765.png" />
+<img alt="../_images/c7c23e37ca3418301b5cc69e938069660022f93e0abe88081b95fc5e5c5c6e58.png" src="../_images/c7c23e37ca3418301b5cc69e938069660022f93e0abe88081b95fc5e5c5c6e58.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -666,7 +671,7 @@ Wall time: 2min 13s
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/c969153cd2c7aa1645f8e1ccdb8fdbda46d92b690e7c900b04f26229b2d6da53.png" src="../_images/c969153cd2c7aa1645f8e1ccdb8fdbda46d92b690e7c900b04f26229b2d6da53.png" />
+<img alt="../_images/94ace3a1dfb0b065e768b23b79a795b3f89f5869ee41962e697994f2ede2ebf2.png" src="../_images/94ace3a1dfb0b065e768b23b79a795b3f89f5869ee41962e697994f2ede2ebf2.png" />
 </div>
 </div>
 </section>

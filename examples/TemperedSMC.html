@@ -121,6 +121,11 @@
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="howto_use_pymc.html">
+     Use with PyMC models
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="howto_use_tfp.html">
      Use with TFP models
     </a>
@@ -595,7 +600,7 @@ $$</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f09b0c2dfa0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f7e70f3c070&gt;
 </pre></div>
 </div>
 <img alt="../_images/640d596490ecc3e66cd07e99ddb457e7257c486aa06a0846c30164d3aa2c71f8.png" src="../_images/640d596490ecc3e66cd07e99ddb457e7257c486aa06a0846c30164d3aa2c71f8.png" />
@@ -615,7 +620,7 @@ $$</p>
     <span class="k">return</span> <span class="n">states</span>
 
 
-<span class="k">def</span> <span class="nf">full_logprob</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">full_logdensity</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="o">-</span><span class="n">V</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">prior_log_prob</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
 
@@ -639,15 +644,15 @@ $$</p>
     <span class="n">step_size</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">inverse_mass_matrix</span><span class="o">=</span><span class="n">inv_mass_matrix</span><span class="p">,</span> <span class="n">num_integration_steps</span><span class="o">=</span><span class="mi">50</span>
 <span class="p">)</span>
 
-<span class="n">hmc</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">hmc</span><span class="p">(</span><span class="n">full_logprob</span><span class="p">,</span> <span class="o">**</span><span class="n">hmc_parameters</span><span class="p">)</span>
+<span class="n">hmc</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">hmc</span><span class="p">(</span><span class="n">full_logdensity</span><span class="p">,</span> <span class="o">**</span><span class="n">hmc_parameters</span><span class="p">)</span>
 <span class="n">hmc_state</span> <span class="o">=</span> <span class="n">hmc</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,)))</span>
 <span class="n">hmc_samples</span> <span class="o">=</span> <span class="n">inference_loop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">hmc</span><span class="o">.</span><span class="n">step</span><span class="p">,</span> <span class="n">hmc_state</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.48 s, sys: 4.01 ms, total: 1.49 s
-Wall time: 1.48 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.21 s, sys: 8.11 ms, total: 1.22 s
+Wall time: 1.22 s
 </pre></div>
 </div>
 </div>
@@ -680,15 +685,15 @@ Wall time: 1.48 s
 
 <span class="n">nuts_parameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">inverse_mass_matrix</span><span class="o">=</span><span class="n">inv_mass_matrix</span><span class="p">)</span>
 
-<span class="n">nuts</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">(</span><span class="n">full_logprob</span><span class="p">,</span> <span class="o">**</span><span class="n">nuts_parameters</span><span class="p">)</span>
+<span class="n">nuts</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">(</span><span class="n">full_logdensity</span><span class="p">,</span> <span class="o">**</span><span class="n">nuts_parameters</span><span class="p">)</span>
 <span class="n">nuts_state</span> <span class="o">=</span> <span class="n">nuts</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,)))</span>
 <span class="n">nuts_samples</span> <span class="o">=</span> <span class="n">inference_loop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">nuts</span><span class="o">.</span><span class="n">step</span><span class="p">,</span> <span class="n">nuts_state</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 8.28 s, sys: 51.8 ms, total: 8.34 s
-Wall time: 8.33 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 7.08 s, sys: 16.4 ms, total: 7.1 s
+Wall time: 7.09 s
 </pre></div>
 </div>
 </div>
@@ -777,8 +782,8 @@ Wall time: 8.33 s
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of steps in the adaptive algorithm:  9
-CPU times: user 2.81 s, sys: 28 ms, total: 2.84 s
-Wall time: 2.8 s
+CPU times: user 2.79 s, sys: 32.3 ms, total: 2.82 s
+Wall time: 2.77 s
 </pre></div>
 </div>
 </div>
@@ -850,7 +855,7 @@ Wall time: 2.8 s
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f09b0232ac0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f7e70432b50&gt;
 </pre></div>
 </div>
 <img alt="../_images/07fc13262f5bd947ec4683f6a29cd1acde81672d7a13207fc0ca239e6ad642d5.png" src="../_images/07fc13262f5bd947ec4683f6a29cd1acde81672d7a13207fc0ca239e6ad642d5.png" />
@@ -891,15 +896,15 @@ Wall time: 2.8 s
     <span class="n">step_size</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span> <span class="n">inverse_mass_matrix</span><span class="o">=</span><span class="n">inv_mass_matrix</span><span class="p">,</span> <span class="n">num_integration_steps</span><span class="o">=</span><span class="mi">50</span>
 <span class="p">)</span>
 
-<span class="n">hmc</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">hmc</span><span class="p">(</span><span class="n">full_logprob</span><span class="p">,</span> <span class="o">**</span><span class="n">hmc_parameters</span><span class="p">)</span>
+<span class="n">hmc</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">hmc</span><span class="p">(</span><span class="n">full_logdensity</span><span class="p">,</span> <span class="o">**</span><span class="n">hmc_parameters</span><span class="p">)</span>
 <span class="n">hmc_state</span> <span class="o">=</span> <span class="n">hmc</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,)))</span>
 <span class="n">hmc_samples</span> <span class="o">=</span> <span class="n">inference_loop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">hmc</span><span class="o">.</span><span class="n">step</span><span class="p">,</span> <span class="n">hmc_state</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 916 ms, sys: 11.8 ms, total: 928 ms
-Wall time: 923 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 888 ms, sys: 4.18 ms, total: 892 ms
+Wall time: 892 ms
 </pre></div>
 </div>
 </div>
@@ -933,15 +938,15 @@ Wall time: 923 ms
 
 <span class="n">nuts_parameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span> <span class="n">inverse_mass_matrix</span><span class="o">=</span><span class="n">inv_mass_matrix</span><span class="p">)</span>
 
-<span class="n">nuts</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">(</span><span class="n">full_logprob</span><span class="p">,</span> <span class="o">**</span><span class="n">nuts_parameters</span><span class="p">)</span>
+<span class="n">nuts</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">(</span><span class="n">full_logdensity</span><span class="p">,</span> <span class="o">**</span><span class="n">nuts_parameters</span><span class="p">)</span>
 <span class="n">nuts_state</span> <span class="o">=</span> <span class="n">nuts</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,)))</span>
 <span class="n">nuts_samples</span> <span class="o">=</span> <span class="n">inference_loop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">nuts</span><span class="o">.</span><span class="n">step</span><span class="p">,</span> <span class="n">nuts_state</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.74 s, sys: 31.9 ms, total: 1.77 s
-Wall time: 1.77 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.51 s, sys: 12 ms, total: 1.52 s
+Wall time: 1.52 s
 </pre></div>
 </div>
 </div>
@@ -1002,8 +1007,8 @@ We correct the bias introduced by the (arbitrary) prior.</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of steps in the adaptive algorithm:  8
-CPU times: user 2.52 s, sys: 36.1 ms, total: 2.56 s
-Wall time: 2.54 s
+CPU times: user 2.81 s, sys: 11.7 ms, total: 2.82 s
+Wall time: 2.81 s
 </pre></div>
 </div>
 </div>
