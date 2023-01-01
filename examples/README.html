@@ -473,7 +473,7 @@ title="Source repository"
 <section id="load-examples-in-a-jupyter-notebook">
 <h3>Load examples in a Jupyter notebook<a class="headerlink" href="#load-examples-in-a-jupyter-notebook" title="Permalink to this headline">#</a></h3>
 <p>To convert any example file to a Jupyter notebook you can use:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>jupytext examples/your_example_file.md --to notebook
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>jupytext<span class="w"> </span>examples/your_example_file.md<span class="w"> </span>--to<span class="w"> </span>notebook
 </pre></div>
 </div>
 <p>you can then interact with the resulting notebook just like with any notebook.</p>
@@ -484,7 +484,7 @@ title="Source repository"
 <section id="convert-my-jupyter-notebook-to-markdown">
 <h3>Convert my Jupyter notebook to markdown<a class="headerlink" href="#convert-my-jupyter-notebook-to-markdown" title="Permalink to this headline">#</a></h3>
 <p>If you implemented your example in a Jupyter notebook you can convert your <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> file to Markdown using the command below:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>jupytext examples/your_example_notebook.ipynb --to myst
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>jupytext<span class="w"> </span>examples/your_example_notebook.ipynb<span class="w"> </span>--to<span class="w"> </span>myst
 </pre></div>
 </div>
 <p>Once the example file is converted to a Markdown file, you have two options for editing:</p>
@@ -502,7 +502,7 @@ title="Source repository"
 <li><p>Add your documentation to <code class="docutils literal notranslate"><span class="pre">docs/examples.rst</span></code></p></li>
 <li><p>Run the command below:</p></li>
 </ol>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span> make build-docs
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>make<span class="w"> </span>build-docs
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
@@ -592,7 +592,7 @@ title="Source repository"
   
     By The Blackjax developers<br/>
   
-      &copy; Copyright 2022, The Blackjax developers.<br/>
+      &copy; Copyright 2023, The Blackjax developers.<br/>
 </p>
         </footer>
     </div>

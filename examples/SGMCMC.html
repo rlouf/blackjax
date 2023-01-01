@@ -500,7 +500,7 @@ title="Source repository"
 
 
 <span class="k">def</span> <span class="nf">batch_data</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">data_size</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return an iterator over batches of data.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an iterator over batches of data.&quot;&quot;&quot;</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">rng_key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng_key</span><span class="p">)</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
@@ -541,21 +541,21 @@ title="Source repository"
 
 
 <span class="k">def</span> <span class="nf">logprior_fn</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the value of the log-prior density function.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the value of the log-prior density function.&quot;&quot;&quot;</span>
     <span class="n">leaves</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree_util</span><span class="o">.</span><span class="n">tree_flatten</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
     <span class="n">flat_params</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">jnp</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">distrax</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">flat_params</span><span class="p">))</span>
 
 
 <span class="k">def</span> <span class="nf">loglikelihood_fn</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Categorical log-likelihood&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Categorical log-likelihood&quot;&quot;&quot;</span>
     <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span>
     <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">model</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">))</span>
 
 
 <span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
 <span class="k">def</span> <span class="nf">compute_accuracy</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the accuracy of the model.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the accuracy of the model.</span>
 
 <span class="sd">    To make predictions we take the number that corresponds to the highest probability value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -634,7 +634,7 @@ title="Source repository"
 </div><div class="output text_html">
     <div>
       <progress value='3340' class='' max='3340' style='width:300px; height:20px; vertical-align: middle;'></progress>
-      100.00% [3340/3340 00:25&lt;00:00]
+      100.00% [3340/3340 00:27&lt;00:00]
     </div>
     </div></div>
 </div>
@@ -716,7 +716,7 @@ title="Source repository"
 </div><div class="output text_html">
     <div>
       <progress value='3340' class='' max='3340' style='width:300px; height:20px; vertical-align: middle;'></progress>
-      100.00% [3340/3340 02:21&lt;00:00]
+      100.00% [3340/3340 02:13&lt;00:00]
     </div>
     </div></div>
 </div>
@@ -748,8 +748,8 @@ title="Source repository"
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The average accuracy for SGLD in the sampling phase is </span><span class="si">{</span><span class="mi">100</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">accuracies</span><span class="p">[</span><span class="mi">10</span><span class="p">:])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The average accuracy for SGHMC in the sampling phase is </span><span class="si">{</span><span class="mi">100</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sghmc_accuracies</span><span class="p">[</span><span class="mi">10</span><span class="p">:])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The average accuracy for SGLD in the sampling phase is </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">accuracies</span><span class="p">[</span><span class="mi">10</span><span class="p">:])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The average accuracy for SGHMC in the sampling phase is </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sghmc_accuracies</span><span class="p">[</span><span class="mi">10</span><span class="p">:])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -884,7 +884,7 @@ The average accuracy for SGHMC in the sampling phase is 93.07%
   
     By The Blackjax developers<br/>
   
-      &copy; Copyright 2022, The Blackjax developers.<br/>
+      &copy; Copyright 2023, The Blackjax developers.<br/>
 </p>
         </footer>
     </div>

@@ -450,9 +450,9 @@ Number of data points: 150
     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="n">keys</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">num_hidden</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">subkey</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">hidden_sizes</span><span class="p">)):</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">nest</span><span class="p">(</span><span class="n">dense</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">),</span> <span class="n">scope</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;layer_</span><span class="si">{</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)(</span><span class="n">subkey</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">nest</span><span class="p">(</span><span class="n">dense</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">),</span> <span class="n">scope</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;layer_</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)(</span><span class="n">subkey</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
         <span class="n">logits</span> <span class="o">=</span> <span class="n">nest</span><span class="p">(</span><span class="n">dense</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">),</span>
-                        <span class="n">scope</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;layer_</span><span class="si">{</span><span class="n">num_hidden</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)(</span><span class="n">keys</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">)</span>
+                        <span class="n">scope</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;layer_</span><span class="si">{</span><span class="n">num_hidden</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)(</span><span class="n">keys</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">logits</span>
 
     <span class="k">return</span> <span class="n">forward</span>
@@ -543,8 +543,8 @@ Number of data points: 150
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2min 26s, sys: 2.77 s, total: 2min 29s
-Wall time: 1min 55s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2min 21s, sys: 3.34 s, total: 2min 24s
+Wall time: 1min 52s
 </pre></div>
 </div>
 </div>
@@ -580,8 +580,8 @@ Wall time: 1min 55s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2min 46s, sys: 3.25 s, total: 2min 50s
-Wall time: 2min 10s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2min 42s, sys: 3.9 s, total: 2min 46s
+Wall time: 2min 8s
 </pre></div>
 </div>
 </div>
@@ -660,7 +660,7 @@ BMA accuracy: 0.99333334
   
     By The Blackjax developers<br/>
   
-      &copy; Copyright 2022, The Blackjax developers.<br/>
+      &copy; Copyright 2023, The Blackjax developers.<br/>
 </p>
         </footer>
     </div>

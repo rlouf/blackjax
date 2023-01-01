@@ -536,7 +536,7 @@ $$</p>
 
 
 <span class="k">def</span> <span class="nf">logdensity_fn</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The log-probability density function of the posterior distribution of the model.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The log-probability density function of the posterior distribution of the model.&quot;&quot;&quot;</span>
     <span class="n">log_an</span> <span class="o">=</span> <span class="n">log_sigmoid</span><span class="p">(</span><span class="n">Phi</span> <span class="o">@</span> <span class="n">w</span><span class="p">)</span>
     <span class="n">an</span> <span class="o">=</span> <span class="n">Phi</span> <span class="o">@</span> <span class="n">w</span>
     <span class="n">log_likelihood_term</span> <span class="o">=</span> <span class="n">y</span> <span class="o">*</span> <span class="n">log_an</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">an</span><span class="p">))</span>
@@ -702,7 +702,7 @@ $$</p>
   
     By The Blackjax developers<br/>
   
-      &copy; Copyright 2022, The Blackjax developers.<br/>
+      &copy; Copyright 2023, The Blackjax developers.<br/>
 </p>
         </footer>
     </div>

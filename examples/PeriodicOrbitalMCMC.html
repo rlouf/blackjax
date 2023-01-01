@@ -526,7 +526,7 @@ $$</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_contour</span><span class="p">(</span><span class="n">logdensity</span><span class="p">,</span> <span class="n">orbits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Contour plots for density w/ or w/o samples.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contour plots for density w/ or w/o samples.&quot;&quot;&quot;</span>
     <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="o">-</span><span class="mf">7.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mf">12.5</span>
     <span class="n">x1</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
     <span class="n">x2</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
@@ -557,7 +557,7 @@ $$</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">inference_loop</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Sequantially draws samples given the kernel of choice.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sequantially draws samples given the kernel of choice.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">one_step</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">rng_key</span><span class="p">):</span>
         <span class="n">state</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kernel</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
@@ -583,7 +583,7 @@ $$</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">logdensity_fn</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Banana density&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Banana density&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logpdf</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">8.0</span><span class="p">))</span> <span class="o">+</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logpdf</span><span class="p">(</span>
         <span class="n">x2</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">x1</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.0</span>
     <span class="p">)</span>
@@ -643,8 +643,8 @@ $$</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 212 ms, sys: 28 µs, total: 212 ms
-Wall time: 212 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 236 ms, sys: 177 µs, total: 237 ms
+Wall time: 237 ms
 </pre></div>
 </div>
 </div>
@@ -661,8 +661,8 @@ Wall time: 212 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 961 ms, sys: 11.9 ms, total: 973 ms
-Wall time: 970 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.01 s, sys: 12.2 ms, total: 1.02 s
+Wall time: 1.02 s
 </pre></div>
 </div>
 </div>
@@ -693,8 +693,8 @@ Wall time: 970 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 13.7 ms, sys: 64 µs, total: 13.7 ms
-Wall time: 13.6 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 15.3 ms, sys: 0 ns, total: 15.3 ms
+Wall time: 15.1 ms
 </pre></div>
 </div>
 </div>
@@ -711,8 +711,8 @@ Wall time: 13.6 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 899 ms, sys: 23 µs, total: 899 ms
-Wall time: 898 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 984 ms, sys: 441 µs, total: 984 ms
+Wall time: 982 ms
 </pre></div>
 </div>
 </div>
@@ -749,8 +749,8 @@ Wall time: 898 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 13.5 ms, sys: 0 ns, total: 13.5 ms
-Wall time: 13.3 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 11.8 ms, sys: 3.72 ms, total: 15.5 ms
+Wall time: 15.2 ms
 </pre></div>
 </div>
 </div>
@@ -767,8 +767,8 @@ Wall time: 13.3 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 880 ms, sys: 7.95 ms, total: 888 ms
-Wall time: 885 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 920 ms, sys: 3.79 ms, total: 924 ms
+Wall time: 920 ms
 </pre></div>
 </div>
 </div>
@@ -849,8 +849,8 @@ v(t) &amp;= v(0) \cos(t) - x(t) \sin(t),
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 13.6 ms, sys: 76 µs, total: 13.6 ms
-Wall time: 13.5 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 15.5 ms, sys: 0 ns, total: 15.5 ms
+Wall time: 15.2 ms
 </pre></div>
 </div>
 </div>
@@ -867,8 +867,8 @@ Wall time: 13.5 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 741 ms, sys: 230 µs, total: 741 ms
-Wall time: 738 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 770 ms, sys: 0 ns, total: 770 ms
+Wall time: 770 ms
 </pre></div>
 </div>
 </div>
@@ -1023,8 +1023,8 @@ v(t) &amp;= v(0) \cos(t) - x(t) \sin(t),
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.47 s, sys: 3.87 ms, total: 1.48 s
-Wall time: 1.47 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.53 s, sys: 8.04 ms, total: 1.54 s
+Wall time: 1.54 s
 </pre></div>
 </div>
 </div>
@@ -1045,7 +1045,7 @@ Wall time: 1.47 s
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/d24713e00f7ec549c7143cb0cc695ae7cea15449179d2f17b4ae9f01fcc36f7a.png" src="../_images/d24713e00f7ec549c7143cb0cc695ae7cea15449179d2f17b4ae9f01fcc36f7a.png" />
+<img alt="../_images/38b4489356c8dfb318a4c65217056be9e65b1957455f4275728995c2cb92d0d3.png" src="../_images/38b4489356c8dfb318a4c65217056be9e65b1957455f4275728995c2cb92d0d3.png" />
 </div>
 </div>
 <p>We define our log pullback given the learned parameters of the transformation and use the periodic orbital MCMC with an ellipsis to sample from this log pullback density.</p>
@@ -1069,8 +1069,8 @@ Wall time: 1.47 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 593 ms, sys: 4.02 ms, total: 597 ms
-Wall time: 595 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 665 ms, sys: 8.07 ms, total: 673 ms
+Wall time: 671 ms
 </pre></div>
 </div>
 </div>
@@ -1087,8 +1087,8 @@ Wall time: 595 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 882 ms, sys: 0 ns, total: 882 ms
-Wall time: 879 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 914 ms, sys: 0 ns, total: 914 ms
+Wall time: 911 ms
 </pre></div>
 </div>
 </div>
@@ -1129,7 +1129,7 @@ Wall time: 879 ms
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/7bec019bc02b19b392723456cad5385b9a69123c0d014f0e9310450a023b136a.png" src="../_images/7bec019bc02b19b392723456cad5385b9a69123c0d014f0e9310450a023b136a.png" />
+<img alt="../_images/41384fd251345eaacb83b91d000ba6ebc7448aa1bbe5ab7aae1e5185d98995d7.png" src="../_images/41384fd251345eaacb83b91d000ba6ebc7448aa1bbe5ab7aae1e5185d98995d7.png" />
 </div>
 </div>
 </section>
@@ -1167,7 +1167,7 @@ Wall time: 879 ms
   
     By The Blackjax developers<br/>
   
-      &copy; Copyright 2022, The Blackjax developers.<br/>
+      &copy; Copyright 2023, The Blackjax developers.<br/>
 </p>
         </footer>
     </div>
