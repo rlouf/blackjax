@@ -38,7 +38,7 @@
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Pathfinder" href="Pathfinder.html" />
+    <link rel="next" title="Regime switching Hidden Markov model" href="RegimeSwitchingModel.html" />
     <link rel="prev" title="Bayesian Regression With Latent Gaussian Sampler" href="GP_Marginal.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -142,6 +142,11 @@
    Use non-JAX log-prob functions?
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="howto_metropolis_within_gibbs.html">
+   Build a Metropolis-Within-Gibbs sampler?
+  </a>
+ </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
@@ -175,11 +180,6 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="SparseLogisticRegression.html">
-     Sparse logistic regression
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="TemperedSMC.html">
      Use Tempered SMC to Improve Exploration of MCMC Methods.
     </a>
@@ -205,23 +205,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="Pathfinder.html">
-     Pathfinder
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="RegimeSwitchingModel.html">
      Regime switching Hidden Markov model
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="HierarchicalBNN.html">
-     Hierarchical Bayesian Neural Networks
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="contour_sgld.html">
-     Contour stochastic gradient Langevin dynamics
     </a>
    </li>
   </ul>
@@ -765,7 +750,7 @@ title="Source repository"
 
 <span class="nd">@jax</span><span class="o">.</span><span class="n">vmap</span>
 <span class="k">def</span> <span class="nf">call_warmup</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
-    <span class="n">initial_states</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">tuned_params</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span>
 
 <span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">call_warmup</span><span class="p">)(</span><span class="n">keys</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
@@ -773,8 +758,8 @@ title="Source repository"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 12.5 s, sys: 76.5 ms, total: 12.5 s
-Wall time: 12.5 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 10.1 s, sys: 31.9 ms, total: 10.2 s
+Wall time: 10.1 s
 </pre></div>
 </div>
 </div>
@@ -814,8 +799,8 @@ Wall time: 12.5 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 11.2 s, sys: 51.4 ms, total: 11.3 s
-Wall time: 11.3 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 9.16 s, sys: 39.9 ms, total: 9.2 s
+Wall time: 9.19 s
 </pre></div>
 </div>
 </div>
@@ -1893,7 +1878,7 @@ Wall time: 11.3 s
 
 <span class="nd">@jax</span><span class="o">.</span><span class="n">vmap</span>
 <span class="k">def</span> <span class="nf">call_warmup</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
-    <span class="n">initial_states</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">tuned_params</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span>
 
 <span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span> <span class="o">=</span> <span class="n">call_warmup</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
@@ -1901,8 +1886,8 @@ Wall time: 11.3 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 17.2 s, sys: 43.4 ms, total: 17.2 s
-Wall time: 17.2 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 14.1 s, sys: 20.1 ms, total: 14.1 s
+Wall time: 14.1 s
 </pre></div>
 </div>
 </div>
@@ -1918,8 +1903,8 @@ Wall time: 17.2 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 11.8 s, sys: 27.8 ms, total: 11.8 s
-Wall time: 11.8 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 9.36 s, sys: 20 ms, total: 9.38 s
+Wall time: 9.37 s
 </pre></div>
 </div>
 </div>
@@ -2948,7 +2933,7 @@ Wall time: 11.8 s
 
 <span class="nd">@jax</span><span class="o">.</span><span class="n">vmap</span>
 <span class="k">def</span> <span class="nf">call_warmup</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
-    <span class="n">initial_states</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">tuned_params</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span>
 
 <span class="n">initial_states</span><span class="p">,</span> <span class="n">tuned_params</span> <span class="o">=</span> <span class="n">call_warmup</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
@@ -2956,8 +2941,8 @@ Wall time: 11.8 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 21.8 s, sys: 75.9 ms, total: 21.9 s
-Wall time: 21.9 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 17.5 s, sys: 79.9 ms, total: 17.6 s
+Wall time: 17.5 s
 </pre></div>
 </div>
 </div>
@@ -2973,8 +2958,8 @@ Wall time: 21.9 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 12.8 s, sys: 48 ms, total: 12.8 s
-Wall time: 12.8 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 10.3 s, sys: 44 ms, total: 10.3 s
+Wall time: 10.3 s
 </pre></div>
 </div>
 </div>
@@ -3943,10 +3928,10 @@ Wall time: 12.8 s
             <p class="prev-next-title">Bayesian Regression With Latent Gaussian Sampler</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="Pathfinder.html" title="next page">
+    <a class='right-next' id="next-link" href="RegimeSwitchingModel.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Pathfinder</p>
+        <p class="prev-next-title">Regime switching Hidden Markov model</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

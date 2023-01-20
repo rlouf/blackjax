@@ -141,6 +141,11 @@
    Use non-JAX log-prob functions?
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="howto_metropolis_within_gibbs.html">
+   Build a Metropolis-Within-Gibbs sampler?
+  </a>
+ </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
@@ -174,11 +179,6 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="SparseLogisticRegression.html">
-     Sparse logistic regression
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="TemperedSMC.html">
      Use Tempered SMC to Improve Exploration of MCMC Methods.
     </a>
@@ -204,23 +204,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="Pathfinder.html">
-     Pathfinder
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="RegimeSwitchingModel.html">
      Regime switching Hidden Markov model
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="HierarchicalBNN.html">
-     Hierarchical Bayesian Neural Networks
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="contour_sgld.html">
-     Contour stochastic gradient Langevin dynamics
     </a>
    </li>
   </ul>
@@ -479,7 +464,7 @@ Number of data points: 150
 <span class="kn">from</span> <span class="nn">oryx.core.ppl</span> <span class="kn">import</span> <span class="n">joint_sample</span>
 
 
-<span class="n">bnn</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span> <span class="n">num_classes</span><span class="p">)</span>
+<span class="n">bnn</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span> <span class="n">num_classes</span><span class="p">)</span>
 <span class="n">initial_weights</span> <span class="o">=</span> <span class="n">joint_sample</span><span class="p">(</span><span class="n">bnn</span><span class="p">)(</span><span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">num_features</span><span class="p">))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">initial_weights</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -509,7 +494,7 @@ Number of data points: 150
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of parameters in the model: 41803
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of parameters in the model: 2953
 </pre></div>
 </div>
 </div>
@@ -533,13 +518,14 @@ Number of data points: 150
 
 <span class="n">rng_key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">adapt</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">window_adaptation</span><span class="p">(</span><span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">,</span> <span class="n">logdensity_fn</span><span class="p">)</span>
-<span class="n">last_state</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">adapt</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">initial_weights</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="p">(</span><span class="n">last_state</span><span class="p">,</span> <span class="n">parameters</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">adapt</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">initial_weights</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">(</span><span class="n">logdensity_fn</span><span class="p">,</span> <span class="o">**</span><span class="n">parameters</span><span class="p">)</span><span class="o">.</span><span class="n">step</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3min 5s, sys: 4.9 s, total: 3min 10s
-Wall time: 2min 37s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 22 s, sys: 68.1 ms, total: 22 s
+Wall time: 22 s
 </pre></div>
 </div>
 </div>
@@ -575,8 +561,8 @@ Wall time: 2min 37s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3min 29s, sys: 5.84 s, total: 3min 35s
-Wall time: 2min 56s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 20.7 s, sys: 32.1 ms, total: 20.7 s
+Wall time: 20.7 s
 </pre></div>
 </div>
 </div>
@@ -616,8 +602,8 @@ Wall time: 2min 56s
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average sample accuracy: 0.98873335
-BMA accuracy: 0.99333334
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average sample accuracy: 0.97940004
+BMA accuracy: 0.9866667
 </pre></div>
 </div>
 </div>

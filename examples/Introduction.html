@@ -141,6 +141,11 @@
    Use non-JAX log-prob functions?
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="howto_metropolis_within_gibbs.html">
+   Build a Metropolis-Within-Gibbs sampler?
+  </a>
+ </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
@@ -174,11 +179,6 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="SparseLogisticRegression.html">
-     Sparse logistic regression
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="TemperedSMC.html">
      Use Tempered SMC to Improve Exploration of MCMC Methods.
     </a>
@@ -204,23 +204,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="Pathfinder.html">
-     Pathfinder
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="RegimeSwitchingModel.html">
      Regime switching Hidden Markov model
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="HierarchicalBNN.html">
-     Hierarchical Bayesian Neural Networks
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="contour_sgld.html">
-     Contour stochastic gradient Langevin dynamics
     </a>
    </li>
   </ul>
@@ -552,7 +537,7 @@ title="Source repository"
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HMCState(position={&#39;loc&#39;: 1.0, &#39;log_scale&#39;: 1.0}, logdensity=DeviceArray(-34719.055, dtype=float32), logdensity_grad={&#39;loc&#39;: DeviceArray(1088.1833, dtype=float32, weak_type=True), &#39;log_scale&#39;: DeviceArray(64600.246, dtype=float32, weak_type=True)})
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HMCState(position={&#39;loc&#39;: 1.0, &#39;log_scale&#39;: 1.0}, logdensity=DeviceArray(-36182.957, dtype=float32), logdensity_grad={&#39;loc&#39;: DeviceArray(1245.7905, dtype=float32, weak_type=True), &#39;log_scale&#39;: DeviceArray(67528.04, dtype=float32, weak_type=True)})
 </pre></div>
 </div>
 </div>
@@ -600,8 +585,8 @@ title="Source repository"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.71 s, sys: 13.8 ms, total: 1.73 s
-Wall time: 1.73 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.48 s, sys: 24.3 ms, total: 1.51 s
+Wall time: 1.51 s
 </pre></div>
 </div>
 </div>
@@ -629,7 +614,7 @@ Wall time: 1.73 s
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;scale&#39;)
 </pre></div>
 </div>
-<img alt="../_images/7462e42d9ec58f2b3fb3ea282dd1f786a456004142df25f47cd41bae7a3a26b3.png" src="../_images/7462e42d9ec58f2b3fb3ea282dd1f786a456004142df25f47cd41bae7a3a26b3.png" />
+<img alt="../_images/b4802d0f459346c6508c675b51df48fd4e53cb9a9a96932cc3a2bc76cc09ec74.png" src="../_images/b4802d0f459346c6508c675b51df48fd4e53cb9a9a96932cc3a2bc76cc09ec74.png" />
 </div>
 </div>
 </section>
@@ -656,7 +641,7 @@ Wall time: 1.73 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HMCState(position={&#39;loc&#39;: 1.0, &#39;log_scale&#39;: 1.0}, logdensity=DeviceArray(-34719.055, dtype=float32), logdensity_grad={&#39;loc&#39;: DeviceArray(1088.1833, dtype=float32, weak_type=True), &#39;log_scale&#39;: DeviceArray(64600.246, dtype=float32, weak_type=True)})
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HMCState(position={&#39;loc&#39;: 1.0, &#39;log_scale&#39;: 1.0}, logdensity=DeviceArray(-36182.957, dtype=float32), logdensity_grad={&#39;loc&#39;: DeviceArray(1245.7905, dtype=float32, weak_type=True), &#39;log_scale&#39;: DeviceArray(67528.04, dtype=float32, weak_type=True)})
 </pre></div>
 </div>
 </div>
@@ -673,8 +658,8 @@ Wall time: 1.73 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 7.72 s, sys: 17.5 ms, total: 7.74 s
-Wall time: 7.73 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 6.51 s, sys: 0 ns, total: 6.51 s
+Wall time: 6.51 s
 </pre></div>
 </div>
 </div>
@@ -702,7 +687,7 @@ Wall time: 7.73 s
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;scale&#39;)
 </pre></div>
 </div>
-<img alt="../_images/059f0db66457563cc454864ddf40c54b864cfd67c71a28eef6fb02a84a52b79c.png" src="../_images/059f0db66457563cc454864ddf40c54b864cfd67c71a28eef6fb02a84a52b79c.png" />
+<img alt="../_images/2faf0bacfeab7b6bb78b32319ee900dbb44f9edd9fd5c2a6f57dae6abd61c4b2.png" src="../_images/2faf0bacfeab7b6bb78b32319ee900dbb44f9edd9fd5c2a6f57dae6abd61c4b2.png" />
 </div>
 </div>
 <section id="use-stan-s-window-adaptation">
@@ -714,13 +699,13 @@ Wall time: 7.73 s
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
 
 <span class="n">warmup</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">window_adaptation</span><span class="p">(</span><span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">,</span> <span class="n">logdensity</span><span class="p">)</span>
-<span class="n">state</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">initial_position</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">parameters</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">warmup</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">initial_position</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3.17 s, sys: 20.5 ms, total: 3.19 s
-Wall time: 3.18 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.45 s, sys: 11.9 ms, total: 2.46 s
+Wall time: 2.45 s
 </pre></div>
 </div>
 </div>
@@ -730,6 +715,7 @@ Wall time: 3.18 s
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
 
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">blackjax</span><span class="o">.</span><span class="n">nuts</span><span class="p">(</span><span class="n">logdensity_fn</span><span class="p">,</span> <span class="o">**</span><span class="n">parameters</span><span class="p">)</span>
 <span class="n">states</span> <span class="o">=</span> <span class="n">inference_loop</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="mi">1_000</span><span class="p">)</span>
 
 <span class="n">loc_samples</span> <span class="o">=</span> <span class="n">states</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">block_until_ready</span><span class="p">()</span>
@@ -738,8 +724,25 @@ Wall time: 3.18 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.31 s, sys: 12 ms, total: 2.32 s
-Wall time: 2.32 s
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">File</span> <span class="o">&lt;</span><span class="n">timed</span> <span class="n">exec</span><span class="o">&gt;</span><span class="p">:</span><span class="mi">2</span>
+
+<span class="nn">Cell In[7], line 8,</span> in <span class="ni">inference_loop</span><span class="nt">(rng_key, kernel, initial_state, num_samples)</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span>     <span class="k">return</span> <span class="n">state</span><span class="p">,</span> <span class="n">state</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="n">keys</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">8</span> <span class="n">_</span><span class="p">,</span> <span class="n">states</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">one_step</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">,</span> <span class="n">keys</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="k">return</span> <span class="n">states</span>
+
+    <span class="p">[</span><span class="o">...</span> <span class="n">skipping</span> <span class="n">hidden</span> <span class="mi">16</span> <span class="n">frame</span><span class="p">]</span>
+
+<span class="nn">Cell In[7], line 4,</span> in <span class="ni">inference_loop.&lt;locals&gt;.one_step</span><span class="nt">(state, rng_key)</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="k">def</span> <span class="nf">one_step</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">rng_key</span><span class="p">):</span>
+<span class="ne">----&gt; </span><span class="mi">4</span>     <span class="n">state</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kernel</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span>     <span class="k">return</span> <span class="n">state</span><span class="p">,</span> <span class="n">state</span>
+
+<span class="ne">TypeError</span>: &#39;MCMCSamplingAlgorithm&#39; object is not callable
 </pre></div>
 </div>
 </div>
@@ -767,7 +770,7 @@ Wall time: 2.32 s
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;scale&#39;)
 </pre></div>
 </div>
-<img alt="../_images/cb70072dcd6ae72d50d40ad94a55ade4fd2c48aea186e4b647afe99f8bf70042.png" src="../_images/cb70072dcd6ae72d50d40ad94a55ade4fd2c48aea186e4b647afe99f8bf70042.png" />
+<img alt="../_images/2faf0bacfeab7b6bb78b32319ee900dbb44f9edd9fd5c2a6f57dae6abd61c4b2.png" src="../_images/2faf0bacfeab7b6bb78b32319ee900dbb44f9edd9fd5c2a6f57dae6abd61c4b2.png" />
 </div>
 </div>
 </section>
